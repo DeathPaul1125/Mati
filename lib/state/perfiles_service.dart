@@ -39,18 +39,12 @@ class PerfilesService extends ChangeNotifier {
     _perfiles = lista.map(Perfil.deserializar).toList();
     _activoId = prefs.getString(_keyActivo);
     _estiloIconos = prefs.getString(_keyEstiloIconos) ?? estiloFluent;
-    if (_perfiles.isEmpty) {
-      _perfiles.add(Perfil(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        nombre: 'Matías',
-        edad: 4,
-        avatar: '🦊',
-        colorValor: coloresPerfilesDisponibles[0],
-      ));
-      _activoId = _perfiles.first.id;
-      await _persistir();
+    // Ya no creamos un perfil por defecto: si la lista está vacía la app
+    // muestra el onboarding la primera vez. Solo nos aseguramos de que
+    // _activoId apunte a alguno cuando sí hay perfiles.
+    if (_perfiles.isNotEmpty) {
+      _activoId ??= _perfiles.first.id;
     }
-    _activoId ??= _perfiles.first.id;
     _cargado = true;
     notifyListeners();
   }

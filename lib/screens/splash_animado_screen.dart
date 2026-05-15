@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../state/perfiles_service.dart';
 import '../theme.dart';
 import '../widgets/fondo_decorativo.dart';
+import 'onboarding_screen.dart';
 import 'zona_infantil_screen.dart';
 
 class SplashAnimadoScreen extends StatefulWidget {
@@ -74,9 +76,13 @@ class _SplashAnimadoScreenState extends State<SplashAnimadoScreen>
 
   void _navegarAlHome() {
     if (!mounted) return;
+    // Si no hay perfiles creados todavía, lanzamos el wizard de bienvenida.
+    final hayPerfiles = PerfilesService.instancia.perfiles.isNotEmpty;
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, _, _) => const ZonaInfantilScreen(),
+        pageBuilder: (_, _, _) => hayPerfiles
+            ? const ZonaInfantilScreen()
+            : const OnboardingScreen(),
         transitionDuration: const Duration(milliseconds: 500),
         transitionsBuilder: (_, animation, _, child) =>
             FadeTransition(opacity: animation, child: child),

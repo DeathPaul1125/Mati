@@ -7,6 +7,7 @@ class Perfil {
   int edad;
   String avatar;
   int colorValor;
+  String? genero; // 'nino', 'nina' o null (no especificado)
   int metaDiariaMin;
   bool limiteEstricto;
   int puntos;
@@ -25,6 +26,7 @@ class Perfil {
     required this.edad,
     required this.avatar,
     required this.colorValor,
+    this.genero,
     this.metaDiariaMin = 15,
     this.limiteEstricto = false,
     this.puntos = 0,
@@ -128,6 +130,7 @@ class Perfil {
         'edad': edad,
         'avatar': avatar,
         'colorValor': colorValor,
+        'genero': genero,
         'metaDiariaMin': metaDiariaMin,
         'limiteEstricto': limiteEstricto,
         'puntos': puntos,
@@ -147,6 +150,7 @@ class Perfil {
         edad: j['edad'] as int,
         avatar: j['avatar'] as String,
         colorValor: j['colorValor'] as int,
+        genero: j['genero'] as String?,
         metaDiariaMin: j['metaDiariaMin'] as int? ?? 15,
         limiteEstricto: j['limiteEstricto'] as bool? ?? false,
         puntos: j['puntos'] as int? ?? 0,
