@@ -29,7 +29,8 @@
       "Bash(keytool -genkey -v -keystore release-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass juegoskids2026 -keypass juegoskids2026 -dname \"CN=Juegos Kids, OU=Educacion, O=JuegosKids, L=Guatemala, S=Guatemala, C=GT\")",
       "Bash(keytool -printcert -jarfile c:/laragon/www/juegos_kids/build/app/outputs/flutter-apk/app-release.apk)",
       "Bash(\"C:/android-sdk/build-tools/35.0.0/apksigner.bat\" verify *)",
-      "Bash(flutter clean *)"
+      "Bash(flutter clean *)",
+      "Bash(awk '{print $5/1048576 \" MB  \" $NF}')"
     ],
     "additionalDirectories": [
       "\\tmp",

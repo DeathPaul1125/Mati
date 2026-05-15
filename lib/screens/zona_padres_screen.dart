@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../state/perfil.dart';
 import '../state/perfiles_service.dart';
@@ -239,7 +240,11 @@ class _ContenidoEstadisticas extends StatelessWidget {
         const SizedBox(height: 14),
         const _BotonCambiarPin(),
         const SizedBox(height: 14),
+        const _BotonBackup(),
+        const SizedBox(height: 14),
         const _SelectorEstiloIconos(),
+        const SizedBox(height: 14),
+        const _BotonAcercaDe(),
       ],
     );
   }
@@ -471,19 +476,6 @@ class _SelectorEstiloIconos extends StatelessWidget {
                       onTap: () => PerfilesService.instancia
                           .setEstiloIconos(
                               PerfilesService.estiloTwemoji),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _OpcionEstilo(
-                      titulo: 'OpenMoji',
-                      subtitulo: 'Plano',
-                      assetMuestra: 'assets/openmoji/1F98A.svg',
-                      seleccionado:
-                          actual == PerfilesService.estiloOpenMoji,
-                      onTap: () => PerfilesService.instancia
-                          .setEstiloIconos(
-                              PerfilesService.estiloOpenMoji),
                     ),
                   ),
                 ],
@@ -837,6 +829,398 @@ class _Cabecera extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w700,
             color: Color(0xFFD0D7FA),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ===================================================================
+// Botón: Exportar / Importar progreso
+// ===================================================================
+
+class _BotonBackup extends StatelessWidget {
+  const _BotonBackup();
+
+  Future<void> _exportar(BuildContext context) async {
+    final json = await PerfilesService.instancia.exportarJson();
+    if (!context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text('Tu copia de seguridad',
+            style: TextStyle(fontFamily: kFuente, fontWeight: FontWeight.w900)),
+        content: SizedBox(
+          width: 360,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Copiá este texto y guardalo en un lugar seguro '
+                '(correo, notas, Drive). Sirve para restaurar tu progreso '
+                'si reinstalás la app o cambiás de teléfono.',
+                style: TextStyle(
+                  fontFamily: kFuente,
+                  fontSize: 13,
+                  color: KidsColors.textoSuave,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                constraints: const BoxConstraints(maxHeight: 200),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F2FB),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: SingleChildScrollView(
+                  child: SelectableText(
+                    json,
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 10,
+                      color: KidsColors.texto,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cerrar'),
+          ),
+          FilledButton.icon(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: json));
+              if (!context.mounted) return;
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(const SnackBar(
+                  backgroundColor: KidsColors.exito,
+                  content: Text('Copiado al portapapeles ✓',
+                      style: TextStyle(
+                          fontFamily: kFuente,
+                          fontWeight: FontWeight.w800)),
+                ));
+            },
+            icon: const Icon(Icons.copy_rounded),
+            label: const Text('Copiar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _importar(BuildContext context) async {
+    final ctrl = TextEditingController();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text('Restaurar progreso',
+            style: TextStyle(fontFamily: kFuente, fontWeight: FontWeight.w900)),
+        content: SizedBox(
+          width: 360,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Pegá la copia de seguridad. Esto va a REEMPLAZAR los perfiles '
+                'que tengas ahora.',
+                style: TextStyle(
+                  fontFamily: kFuente,
+                  fontSize: 13,
+                  color: KidsColors.textoSuave,
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: ctrl,
+                maxLines: 8,
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
+                decoration: InputDecoration(
+                  hintText: 'Pegá aquí el texto exportado…',
+                  filled: true,
+                  fillColor: const Color(0xFFF0F2FB),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton.icon(
+            onPressed: () async {
+              final clipboard = await Clipboard.getData('text/plain');
+              if (clipboard?.text != null) {
+                ctrl.text = clipboard!.text!;
+              }
+            },
+            icon: const Icon(Icons.paste_rounded),
+            label: const Text('Pegar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Restaurar'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || ctrl.text.trim().isEmpty) return;
+    final exito = await PerfilesService.instancia.importarJson(ctrl.text);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        backgroundColor: exito ? KidsColors.exito : KidsColors.error,
+        content: Text(
+          exito
+              ? 'Progreso restaurado ✓'
+              : 'No se pudo leer la copia. Revisá el texto.',
+          style: const TextStyle(
+              fontFamily: kFuente, fontWeight: FontWeight.w800),
+        ),
+      ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFF22C55E),
+      borderRadius: BorderRadius.circular(24),
+      elevation: 4,
+      shadowColor: const Color(0x5522C55E),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.25),
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.cloud_download_rounded,
+                      color: Colors.white, size: 24),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Copia de seguridad',
+                        style: TextStyle(
+                          fontFamily: kFuente,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        'Guardá y restaurá perfiles y progreso',
+                        style: TextStyle(
+                          fontFamily: kFuente,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _exportar(context),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.white, width: 2),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    icon: const Icon(Icons.file_upload_outlined, size: 18),
+                    label: const Text('Exportar',
+                        style: TextStyle(
+                            fontFamily: kFuente,
+                            fontWeight: FontWeight.w800)),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () => _importar(context),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF22C55E),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    icon: const Icon(Icons.file_download_outlined, size: 18),
+                    label: const Text('Restaurar',
+                        style: TextStyle(
+                            fontFamily: kFuente,
+                            fontWeight: FontWeight.w800)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ===================================================================
+// Botón: Acerca de la app
+// ===================================================================
+
+class _BotonAcercaDe extends StatelessWidget {
+  const _BotonAcercaDe();
+
+  void _abrir(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Row(
+          children: [
+            Icon(Icons.rocket_launch_rounded, color: Color(0xFF7C4DFF)),
+            SizedBox(width: 8),
+            Text('Juegos Kids',
+                style: TextStyle(
+                    fontFamily: kFuente, fontWeight: FontWeight.w900)),
+          ],
+        ),
+        content: const SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Aplicación educativa para niños de 3 a 7 años.',
+                style: TextStyle(
+                    fontFamily: kFuente, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 12),
+              Text(
+                '🔒 Privacidad',
+                style: TextStyle(
+                    fontFamily: kFuente,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15),
+              ),
+              SizedBox(height: 4),
+              Text(
+                '• La app funciona 100% sin conexión a internet.\n'
+                '• Ningún dato del niño se envía a servidores.\n'
+                '• Todo (perfiles, voz grabada, progreso) se guarda solo '
+                'en el teléfono.\n'
+                '• No hay anuncios ni rastreadores.',
+                style: TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 13,
+                    color: KidsColors.textoSuave),
+              ),
+              SizedBox(height: 12),
+              Text(
+                '🎨 Créditos',
+                style: TextStyle(
+                    fontFamily: kFuente,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15),
+              ),
+              SizedBox(height: 4),
+              Text(
+                '• Fluent Emoji (Microsoft, MIT)\n'
+                '• Twemoji (Twitter / X, CC-BY 4.0)\n'
+                '• Fredoka font (SIL Open Font License)',
+                style: TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 13,
+                    color: KidsColors.textoSuave),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cerrar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(24),
+      elevation: 2,
+      shadowColor: Colors.black12,
+      child: InkWell(
+        onTap: () => _abrir(context),
+        borderRadius: BorderRadius.circular(24),
+        child: const Padding(
+          padding: EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Icon(Icons.info_outline_rounded,
+                  color: Color(0xFF6438D8), size: 26),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Acerca de la app',
+                      style: TextStyle(
+                        fontFamily: kFuente,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: KidsColors.texto,
+                      ),
+                    ),
+                    Text(
+                      'Privacidad, créditos y versión',
+                      style: TextStyle(
+                        fontFamily: kFuente,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: KidsColors.textoSuave,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded, color: KidsColors.textoSuave),
+            ],
           ),
         ),
       ),

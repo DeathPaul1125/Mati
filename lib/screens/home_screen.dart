@@ -185,10 +185,10 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const _CabeceraHome(),
-              const SizedBox(height: 10),
+              const _BannerRacha(),
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.only(bottom: 18),
+                  padding: const EdgeInsets.only(top: 8, bottom: 18),
                   children: [
                     for (final s in secciones) _SeccionFila(seccion: s),
                   ],
@@ -738,6 +738,101 @@ class _PreviewTexto extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+// ===================================================================
+// Banner de racha diaria — solo se muestra si jugó 2+ días consecutivos
+// ===================================================================
+
+class _BannerRacha extends StatelessWidget {
+  const _BannerRacha();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: PerfilesService.instancia,
+      builder: (context, _) {
+        final p = PerfilesService.instancia.activo;
+        if (p == null) return const SizedBox(height: 10);
+        final racha = p.diasConsecutivos();
+        if (racha < 2) return const SizedBox(height: 10);
+
+        // Mensaje motivacional según la longitud de la racha
+        final String mensaje;
+        if (racha >= 30) {
+          mensaje = '¡30 días seguidos! ¡Eres una estrella!';
+        } else if (racha >= 14) {
+          mensaje = '¡2 semanas seguidas! Sigue así.';
+        } else if (racha >= 7) {
+          mensaje = '¡Una semana entera jugando!';
+        } else if (racha >= 5) {
+          mensaje = '¡Vas $racha días! ¡Buenísimo!';
+        } else {
+          mensaje = '¡$racha días seguidos!';
+        }
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(14, 6, 14, 0),
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFFA500), Color(0xFFFFD93D)],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x55FFA500),
+                  blurRadius: 12,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                const Text('🔥', style: TextStyle(fontSize: 28)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '$racha días de racha',
+                        style: const TextStyle(
+                          fontFamily: kFuente,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black26,
+                              offset: Offset(0, 1),
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        mensaje,
+                        style: const TextStyle(
+                          fontFamily: kFuente,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

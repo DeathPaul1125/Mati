@@ -67,7 +67,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/openmoji/
     - assets/twemoji/
     - assets/fluent/
     - assets/audio/

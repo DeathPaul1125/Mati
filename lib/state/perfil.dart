@@ -60,6 +60,30 @@ class Perfil {
   List<String> get diasJugados =>
       segundosPorDia.entries.where((e) => e.value > 0).map((e) => e.key).toList();
 
+  /// Cuenta los días consecutivos jugados terminando hoy (o ayer, si todavía
+  /// no jugó hoy). Si rompió la racha hace varios días, devuelve 0.
+  int diasConsecutivos() {
+    final dias = diasJugados.toSet();
+    if (dias.isEmpty) return 0;
+    final n = DateTime.now();
+    var dia = DateTime(n.year, n.month, n.day);
+    String fmt(DateTime d) =>
+        '${d.year.toString().padLeft(4, '0')}-'
+        '${d.month.toString().padLeft(2, '0')}-'
+        '${d.day.toString().padLeft(2, '0')}';
+    // Si todavía no jugó HOY, dejamos pasar (la racha sigue viva si jugó ayer)
+    if (!dias.contains(fmt(dia))) {
+      dia = dia.subtract(const Duration(days: 1));
+      if (!dias.contains(fmt(dia))) return 0;
+    }
+    var racha = 0;
+    while (dias.contains(fmt(dia))) {
+      racha++;
+      dia = dia.subtract(const Duration(days: 1));
+    }
+    return racha;
+  }
+
   int nivel() {
     final t = totalEstrellas;
     if (t < 10) return 1;

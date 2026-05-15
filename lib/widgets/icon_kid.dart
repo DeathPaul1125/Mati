@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../state/perfiles_service.dart';
 
 /// Codepoints que solo se distribuyen en el set Fluent (caras de emociones
-/// que no están en los packs Twemoji/OpenMoji incluidos).
+/// que no están en el pack Twemoji incluido).
 const Set<String> _soloFluent = {
   '1f600', // feliz
   '1f60d', // enamorado
@@ -79,10 +79,9 @@ class IconKid extends StatelessWidget {
         if (_soloFluent.contains(codeLower) ||
             estilo == PerfilesService.estiloFluent) {
           asset = 'assets/fluent/$codeLower.svg';
-        } else if (estilo == PerfilesService.estiloTwemoji) {
-          asset = 'assets/twemoji/$codeLower.svg';
         } else {
-          asset = 'assets/openmoji/$code.svg';
+          // Twemoji (cualquier valor distinto a fluent cae acá)
+          asset = 'assets/twemoji/$codeLower.svg';
         }
         final svg = SvgPicture.asset(
           asset,

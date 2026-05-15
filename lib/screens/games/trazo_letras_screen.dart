@@ -46,7 +46,9 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen>
   int _trazoActual = 0;
   int _puntoActual = 0;
   bool _animandoExito = false;
+  bool _mostrarTutorial = false;
   late final AnimationController _pulso;
+  late final AnimationController _manoTutorial;
 
   _LetraTrazo get _letra => _letras[_letraIdx];
   Color get _colorLetra => _coloresLetra[_letraIdx % _coloresLetra.length];
@@ -63,12 +65,28 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     )..repeat(reverse: true);
+    _manoTutorial = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    )..repeat();
+    // Mostrar el tutorial solo si el perfil aún NO lo vio.
+    final perfil = PerfilesService.instancia.activo;
+    if (perfil != null && !perfil.tutorialesVistos.contains('trazar')) {
+      _mostrarTutorial = true;
+    }
   }
 
   @override
   void dispose() {
     _pulso.dispose();
+    _manoTutorial.dispose();
     super.dispose();
+  }
+
+  void _dejarTutorial() {
+    if (!_mostrarTutorial) return;
+    setState(() => _mostrarTutorial = false);
+    PerfilesService.instancia.marcarTutorialVisto('trazar');
   }
 
   void _reset() {
@@ -101,6 +119,7 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen>
     final dist = (pos - objetivoPx).distance;
 
     if (dist < 50) {
+      _dejarTutorial();
       setState(() => _puntoActual++);
       if (_puntoActual >= trazo.length) {
         if (_trazoActual + 1 < _letra.trazos.length) {
@@ -174,19 +193,29 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen>
                           width: 3,
                         ),
                       ),
-                      child: AnimatedBuilder(
-                        animation: _pulso,
-                        builder: (_, _) => CustomPaint(
-                          painter: _TrazoPainter(
-                            letra: _letra,
-                            color: _colorLetra,
-                            trazoActual: _trazoActual,
-                            puntoActual: _puntoActual,
-                            completo: _animandoExito,
-                            pulso: _pulso.value,
+                      child: Stack(
+                        children: [
+                          AnimatedBuilder(
+                            animation: _pulso,
+                            builder: (_, _) => CustomPaint(
+                              painter: _TrazoPainter(
+                                letra: _letra,
+                                color: _colorLetra,
+                                trazoActual: _trazoActual,
+                                puntoActual: _puntoActual,
+                                completo: _animandoExito,
+                                pulso: _pulso.value,
+                              ),
+                              size: Size.infinite,
+                            ),
                           ),
-                          size: Size.infinite,
-                        ),
+                          if (_mostrarTutorial && _puntoActual == 0)
+                            _ManoTutorial(
+                              animacion: _manoTutorial,
+                              puntos: _letra.trazos.first,
+                              canvasSize: canvasSize,
+                            ),
+                        ],
                       ),
                     ),
                   );
@@ -1187,4 +1216,108 @@ List<_LetraTrazo> _construirLetras() {
       ],
     ),
   ];
+}
+
+// ===================================================================
+// Tutorial: mano fantasma que se desliza por el primer trazo
+// Solo aparece la PRIMERA vez que el niño entra al juego de Trazar.
+// ===================================================================
+
+class _ManoTutorial extends StatelessWidget {
+  final AnimationController animacion;
+  final List<Offset> puntos;
+  final Size canvasSize;
+
+  const _ManoTutorial({
+    required this.animacion,
+    required this.puntos,
+    required this.canvasSize,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: AnimatedBuilder(
+          animation: animacion,
+          builder: (context, _) {
+            // El ciclo tiene una pausa al inicio y al final.
+            // 0..0.15 → quieto en el primer punto
+            // 0.15..0.85 → desliza por todos los puntos
+            // 0.85..1.0 → quieto al final
+            final t = animacion.value;
+            final double progreso;
+            if (t < 0.15) {
+              progreso = 0.0;
+            } else if (t < 0.85) {
+              progreso = (t - 0.15) / 0.70;
+            } else {
+              progreso = 1.0;
+            }
+            // Interpolar entre los puntos del trazo
+            final n = puntos.length;
+            final pos = progreso * (n - 1);
+            final i = pos.floor().clamp(0, n - 1);
+            final f = (pos - i).clamp(0.0, 1.0);
+            final a = puntos[i];
+            final b = puntos[i + 1 < n ? i + 1 : i];
+            final lado = canvasSize.width < canvasSize.height
+                ? canvasSize.width
+                : canvasSize.height;
+            final escala = lado * 0.92;
+            final ox = (canvasSize.width - escala) / 2;
+            final oy = (canvasSize.height - escala) / 2;
+            final px = ox + (a.dx + (b.dx - a.dx) * f) * escala;
+            final py = oy + (a.dy + (b.dy - a.dy) * f) * escala;
+
+            // Fade in al inicio + un anillo halo
+            final opacidad = (t < 0.05 ? t / 0.05 : 1.0).clamp(0.0, 1.0);
+            return Stack(
+              children: [
+                Positioned(
+                  left: px - 24,
+                  top: py - 24,
+                  child: Opacity(
+                    opacity: opacidad,
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0x44FFFFFF),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          width: 3,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: px - 18,
+                  top: py - 6,
+                  child: Opacity(
+                    opacity: opacidad,
+                    child: const Text(
+                      '👆',
+                      style: TextStyle(
+                        fontSize: 48,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black38,
+                            offset: Offset(0, 2),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'logros.dart';
@@ -12,7 +13,6 @@ class PerfilesService extends ChangeNotifier {
   static const _keyPin = 'pin_padres_v1';
   static const _keyEstiloIconos = 'estilo_iconos_v1';
   static const _pinPorDefecto = '1234';
-  static const estiloOpenMoji = 'openmoji';
   static const estiloTwemoji = 'twemoji';
   static const estiloFluent = 'fluent';
 
@@ -39,6 +39,11 @@ class PerfilesService extends ChangeNotifier {
     _perfiles = lista.map(Perfil.deserializar).toList();
     _activoId = prefs.getString(_keyActivo);
     _estiloIconos = prefs.getString(_keyEstiloIconos) ?? estiloFluent;
+    // Migración: usuarios que tenían 'openmoji' guardado caen al default Fluent.
+    if (_estiloIconos != estiloFluent && _estiloIconos != estiloTwemoji) {
+      _estiloIconos = estiloFluent;
+      await prefs.setString(_keyEstiloIconos, _estiloIconos);
+    }
     // Ya no creamos un perfil por defecto: si la lista está vacía la app
     // muestra el onboarding la primera vez. Solo nos aseguramos de que
     // _activoId apunte a alguno cuando sí hay perfiles.
@@ -149,6 +154,51 @@ class PerfilesService extends ChangeNotifier {
   Future<void> establecerPin(String pin) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyPin, pin);
+  }
+
+  /// Exporta TODOS los datos (perfiles + estilo de iconos + PIN) como JSON
+  /// para que el padre pueda guardarlo y restaurarlo después.
+  Future<String> exportarJson() async {
+    final prefs = await SharedPreferences.getInstance();
+    final pin = prefs.getString(_keyPin) ?? _pinPorDefecto;
+    final data = {
+      'version': 1,
+      'fecha': DateTime.now().toIso8601String(),
+      'estilo_iconos': _estiloIconos,
+      'pin': pin,
+      'perfiles': _perfiles.map((p) => p.toJson()).toList(),
+    };
+    return const JsonEncoder.withIndent('  ').convert(data);
+  }
+
+  /// Restaura un JSON exportado previamente. Reemplaza completamente los
+  /// perfiles existentes. Devuelve true si la importación tuvo éxito.
+  Future<bool> importarJson(String texto) async {
+    try {
+      final data = jsonDecode(texto) as Map<String, dynamic>;
+      final perfilesData = data['perfiles'] as List;
+      final nuevos = perfilesData
+          .map((j) => Perfil.fromJson(j as Map<String, dynamic>))
+          .toList();
+      if (nuevos.isEmpty) return false;
+      _perfiles = nuevos;
+      _activoId = nuevos.first.id;
+      final estilo = data['estilo_iconos'] as String?;
+      if (estilo == estiloFluent || estilo == estiloTwemoji) {
+        _estiloIconos = estilo!;
+      }
+      await _persistir();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_keyEstiloIconos, _estiloIconos);
+      final pin = data['pin'] as String?;
+      if (pin != null && pin.length == 4) {
+        await prefs.setString(_keyPin, pin);
+      }
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<void> setEstiloIconos(String estilo) async {
