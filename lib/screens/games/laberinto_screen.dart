@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../state/audio_service.dart';
 import '../../state/jugadores.dart';
@@ -25,9 +26,10 @@ class _Laberinto {
 }
 
 class _LaberintoScreenState extends State<LaberintoScreen> {
-  // Caminos sencillos para niños 3-7
+  // Caminos sencillos para niños 3-7. Mezcla de patrones para que cada
+  // sesión sea distinta.
   static final List<_Laberinto> _laberintos = [
-    // Zigzag horizontal
+    // 1. Zigzag horizontal de izquierda a derecha
     _Laberinto(
       inicioEmoji: '🐭',
       finEmoji: '🧀',
@@ -40,7 +42,7 @@ class _LaberintoScreenState extends State<LaberintoScreen> {
         const Offset(0.92, 0.70),
       ],
     ),
-    // U invertida
+    // 2. U invertida
     _Laberinto(
       inicioEmoji: '🐶',
       finEmoji: '🦴',
@@ -52,7 +54,7 @@ class _LaberintoScreenState extends State<LaberintoScreen> {
         const Offset(0.90, 0.85),
       ],
     ),
-    // Camino curvilíneo en S
+    // 3. Camino curvilíneo en S
     _Laberinto(
       inicioEmoji: '🐝',
       finEmoji: '🌹',
@@ -65,7 +67,7 @@ class _LaberintoScreenState extends State<LaberintoScreen> {
         const Offset(0.92, 0.85),
       ],
     ),
-    // Escalera descendente
+    // 4. Escalera descendente
     _Laberinto(
       inicioEmoji: '🐱',
       finEmoji: '🐟',
@@ -79,7 +81,7 @@ class _LaberintoScreenState extends State<LaberintoScreen> {
         const Offset(0.90, 0.88),
       ],
     ),
-    // Diagonal con codo
+    // 5. Diagonal con codo
     _Laberinto(
       inicioEmoji: '🐰',
       finEmoji: '🥕',
@@ -90,17 +92,156 @@ class _LaberintoScreenState extends State<LaberintoScreen> {
         const Offset(0.85, 0.85),
       ],
     ),
+    // 6. Espiral hacia adentro
+    _Laberinto(
+      inicioEmoji: '🐢',
+      finEmoji: '🌿',
+      camino: [
+        const Offset(0.10, 0.10),
+        const Offset(0.90, 0.10),
+        const Offset(0.90, 0.90),
+        const Offset(0.10, 0.90),
+        const Offset(0.10, 0.30),
+        const Offset(0.70, 0.30),
+        const Offset(0.70, 0.70),
+        const Offset(0.40, 0.70),
+        const Offset(0.40, 0.50),
+      ],
+    ),
+    // 7. Zigzag vertical
+    _Laberinto(
+      inicioEmoji: '🐦',
+      finEmoji: '🌳',
+      camino: [
+        const Offset(0.15, 0.10),
+        const Offset(0.15, 0.30),
+        const Offset(0.50, 0.30),
+        const Offset(0.50, 0.55),
+        const Offset(0.85, 0.55),
+        const Offset(0.85, 0.85),
+      ],
+    ),
+    // 8. L mayúscula
+    _Laberinto(
+      inicioEmoji: '🦊',
+      finEmoji: '🍇',
+      camino: [
+        const Offset(0.15, 0.15),
+        const Offset(0.15, 0.85),
+        const Offset(0.90, 0.85),
+      ],
+    ),
+    // 9. Z mayúscula
+    _Laberinto(
+      inicioEmoji: '🐝',
+      finEmoji: '🍯',
+      camino: [
+        const Offset(0.10, 0.15),
+        const Offset(0.90, 0.15),
+        const Offset(0.20, 0.85),
+        const Offset(0.90, 0.85),
+      ],
+    ),
+    // 10. M (subir-bajar-subir-bajar)
+    _Laberinto(
+      inicioEmoji: '🐛',
+      finEmoji: '🍓',
+      camino: [
+        const Offset(0.10, 0.85),
+        const Offset(0.25, 0.15),
+        const Offset(0.50, 0.55),
+        const Offset(0.75, 0.15),
+        const Offset(0.90, 0.85),
+      ],
+    ),
+    // 11. Diagonal recta
+    _Laberinto(
+      inicioEmoji: '🐌',
+      finEmoji: '🌺',
+      camino: [
+        const Offset(0.10, 0.10),
+        const Offset(0.35, 0.35),
+        const Offset(0.60, 0.60),
+        const Offset(0.90, 0.90),
+      ],
+    ),
+    // 12. Caracol cuadrado pequeño
+    _Laberinto(
+      inicioEmoji: '🦋',
+      finEmoji: '🌸',
+      camino: [
+        const Offset(0.50, 0.50),
+        const Offset(0.80, 0.50),
+        const Offset(0.80, 0.85),
+        const Offset(0.15, 0.85),
+        const Offset(0.15, 0.20),
+        const Offset(0.85, 0.20),
+      ],
+    ),
+    // 13. Camino con tres codos
+    _Laberinto(
+      inicioEmoji: '🐥',
+      finEmoji: '🐣',
+      camino: [
+        const Offset(0.10, 0.20),
+        const Offset(0.40, 0.20),
+        const Offset(0.40, 0.50),
+        const Offset(0.70, 0.50),
+        const Offset(0.70, 0.20),
+        const Offset(0.90, 0.20),
+        const Offset(0.90, 0.85),
+      ],
+    ),
+    // 14. V invertida (montaña)
+    _Laberinto(
+      inicioEmoji: '🐭',
+      finEmoji: '🧀',
+      camino: [
+        const Offset(0.10, 0.85),
+        const Offset(0.30, 0.50),
+        const Offset(0.50, 0.15),
+        const Offset(0.70, 0.50),
+        const Offset(0.90, 0.85),
+      ],
+    ),
+    // 15. Doble U (W)
+    _Laberinto(
+      inicioEmoji: '🐶',
+      finEmoji: '🎾',
+      camino: [
+        const Offset(0.10, 0.15),
+        const Offset(0.10, 0.85),
+        const Offset(0.40, 0.85),
+        const Offset(0.40, 0.30),
+        const Offset(0.60, 0.30),
+        const Offset(0.60, 0.85),
+        const Offset(0.90, 0.85),
+      ],
+    ),
   ];
 
-  int _idx = 0;
+  final _rng = Random();
+  late List<int> _orden; // índices barajados
+  int _posicionEnOrden = 0;
   int _puntoActual = 0;
   bool _completo = false;
 
-  _Laberinto get _lab => _laberintos[_idx];
+  _Laberinto get _lab => _laberintos[_orden[_posicionEnOrden]];
+
+  @override
+  void initState() {
+    super.initState();
+    _orden = List.generate(_laberintos.length, (i) => i)..shuffle(_rng);
+  }
 
   void _siguiente() {
     setState(() {
-      _idx = (_idx + 1) % _laberintos.length;
+      _posicionEnOrden++;
+      if (_posicionEnOrden >= _orden.length) {
+        // Re-mezclar al terminar el ciclo
+        _orden = List.generate(_laberintos.length, (i) => i)..shuffle(_rng);
+        _posicionEnOrden = 0;
+      }
       _puntoActual = 0;
       _completo = false;
     });

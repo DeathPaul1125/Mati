@@ -421,6 +421,15 @@ class _BotonPadres extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final w = MediaQuery.of(context).size.width;
+    // Tres modos según el ancho de pantalla:
+    //  - <340  → solo icono (botón redondo)
+    //  - <420  → "Padres"
+    //  - resto → "Para los padres"
+    final String? texto = w < 340
+        ? null
+        : (w < 420 ? 'Padres' : 'Para los padres');
+
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(28),
@@ -429,23 +438,28 @@ class _BotonPadres extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(28),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: texto == null ? 10 : 14,
+            vertical: 10,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.person_rounded,
-                  size: 20, color: Color(0xFF6438D8)),
-              SizedBox(width: 4),
-              Text(
-                'Para los padres',
-                style: TextStyle(
-                  fontFamily: kFuente,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: KidsColors.texto,
+              const Icon(Icons.person_rounded,
+                  size: 22, color: Color(0xFF6438D8)),
+              if (texto != null) ...[
+                const SizedBox(width: 4),
+                Text(
+                  texto,
+                  style: const TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: KidsColors.texto,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

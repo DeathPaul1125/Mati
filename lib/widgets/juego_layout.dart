@@ -16,6 +16,9 @@ class JuegoLayout extends StatefulWidget {
   final Widget child;
   final List<String>? simbolosTema;
   final String? audioInstruccion;
+  // Si es false, no se muestra la barra superior con el chip del jugador
+  // (solo se sigue mostrando si hay modo multijugador activo).
+  final bool mostrarJugador;
 
   const JuegoLayout({
     super.key,
@@ -25,6 +28,7 @@ class JuegoLayout extends StatefulWidget {
     this.categoria,
     this.simbolosTema,
     this.audioInstruccion,
+    this.mostrarJugador = false,
   });
 
   @override
@@ -90,7 +94,15 @@ class _JuegoLayoutState extends State<JuegoLayout> {
               SafeArea(
                 child: Column(
                   children: [
-                    BarraJugadores(color: widget.color),
+                    // El chip del jugador se sigue mostrando en multijugador
+                    // (importante para indicar de quién es el turno) o cuando
+                    // el juego lo pida explícitamente.
+                    if (widget.mostrarJugador ||
+                        Jugadores.instancia.multijugador)
+                      BarraJugadores(color: widget.color)
+                    else
+                      // Mantenemos el espacio que ocupaba la AppBar
+                      const SizedBox(height: 70),
                     Expanded(child: widget.child),
                   ],
                 ),

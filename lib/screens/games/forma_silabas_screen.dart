@@ -221,21 +221,28 @@ class _FormaSilabasScreenState extends State<FormaSilabasScreen>
             ],
           );
 
-          final tiles = Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              for (var i = 0; i < _silabasMezcla.length; i++)
-                _TileSilaba(
-                  silaba: _silabasMezcla[i],
-                  usada: _usadas[i],
-                  incorrecta: _tileIncorrecto == i,
-                  color: _color,
-                  shake: _shake,
-                  onTap: () => _tocar(i),
-                ),
-            ],
+          // Para palabras de 3+ sílabas usamos 2 columnas para que TODAS
+          // las fichas quepan sin que se corten abajo.
+          final tilesCantidad = _silabasMezcla.length;
+          final tiles = GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: tilesCantidad <= 2 ? tilesCantidad : 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 2.6,
+            ),
+            itemCount: tilesCantidad,
+            itemBuilder: (context, i) => _TileSilaba(
+              silaba: _silabasMezcla[i],
+              usada: _usadas[i],
+              incorrecta: _tileIncorrecto == i,
+              color: _color,
+              shake: _shake,
+              onTap: () => _tocar(i),
+            ),
           );
 
           if (landscape) {
@@ -260,8 +267,10 @@ class _FormaSilabasScreenState extends State<FormaSilabasScreen>
               ),
             );
           }
+          // Padding inferior dinámico para esquivar la barra de navegación.
+          final bottomInset = MediaQuery.of(context).padding.bottom;
           return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+            padding: EdgeInsets.fromLTRB(16, 4, 16, 12 + bottomInset),
             child: Column(
               children: [
                 const Text(

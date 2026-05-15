@@ -20,7 +20,16 @@
       "Bash(cp -r c:/laragon/www/juegos_kids c:/laragon/www/kids_games_en)",
       "Bash(rm -rf c:/laragon/www/kids_games_en/build c:/laragon/www/kids_games_en/.dart_tool c:/laragon/www/kids_games_en/.idea)",
       "Bash(python c:/tmp/translate_kids.py)",
-      "Bash(python c:/tmp/translate_kids2.py)"
+      "Bash(python c:/tmp/translate_kids2.py)",
+      "Bash(rm -rf kids_games_en_old)",
+      "Bash(mv kids_games_en kids_games_en_old)",
+      "Bash(python c:/tmp/fix_en.py)",
+      "Bash(python c:/tmp/fix_en2.py)",
+      "Bash(keytool -help)",
+      "Bash(keytool -genkey -v -keystore release-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass juegoskids2026 -keypass juegoskids2026 -dname \"CN=Juegos Kids, OU=Educacion, O=JuegosKids, L=Guatemala, S=Guatemala, C=GT\")",
+      "Bash(keytool -printcert -jarfile c:/laragon/www/juegos_kids/build/app/outputs/flutter-apk/app-release.apk)",
+      "Bash(\"C:/android-sdk/build-tools/35.0.0/apksigner.bat\" verify *)",
+      "Bash(flutter clean *)"
     ],
     "additionalDirectories": [
       "\\tmp",
