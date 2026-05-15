@@ -1145,23 +1145,52 @@ class _BotonAcercaDe extends StatelessWidget {
                     fontSize: 13,
                     color: KidsColors.textoSuave),
               ),
-              SizedBox(height: 12),
-              Text(
-                '🎨 Créditos',
-                style: TextStyle(
-                    fontFamily: kFuente,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 15),
+              SizedBox(height: 16),
+              Center(
+                child: Text(
+                  '❤',
+                  style: TextStyle(fontSize: 28),
+                ),
               ),
-              SizedBox(height: 4),
-              Text(
-                '• Fluent Emoji (Microsoft, MIT)\n'
-                '• Twemoji (Twitter / X, CC-BY 4.0)\n'
-                '• Fredoka font (SIL Open Font License)',
-                style: TextStyle(
+              SizedBox(height: 8),
+              Center(
+                child: Text(
+                  'Hecho para Matías Aceituno,',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                     fontFamily: kFuente,
-                    fontSize: 13,
-                    color: KidsColors.textoSuave),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: KidsColors.texto,
+                  ),
+                ),
+              ),
+              SizedBox(height: 2),
+              Center(
+                child: Text(
+                  'por su papá que lo ama mucho.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: KidsColors.textoSuave,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Center(
+                child: Text(
+                  '— Pablo Aceituno',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w700,
+                    color: KidsColors.texto,
+                  ),
+                ),
               ),
             ],
           ),
