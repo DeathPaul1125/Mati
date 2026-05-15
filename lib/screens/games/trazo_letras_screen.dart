@@ -119,10 +119,7 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen>
     setState(() => _animandoExito = true);
     Jugadores.instancia.sumarYPasarTurno();
     PerfilesService.instancia.sumarEstrellaActivo('trazo');
-    AudioService.instancia.muyBien();
-    await Future.delayed(const Duration(milliseconds: 700));
-    if (!mounted) return;
-    AudioService.instancia.letra(_letra.letra, palabraEjemplo: _letra.palabra);
+    AudioService.instancia.celebrarYLetra(_letra.letra, palabraEjemplo: _letra.palabra);
     await mostrarCelebracion(
       context,
       subtitulo: '${_letra.letra} de ${_letra.palabra}',

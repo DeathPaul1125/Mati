@@ -112,8 +112,7 @@ class _RimasScreenState extends State<RimasScreen> {
     if (p.palabra == _correcta.palabra) {
       Jugadores.instancia.sumarYPasarTurno();
       PerfilesService.instancia.sumarEstrellaActivo('lectura');
-      AudioService.instancia.muyBien();
-      AudioService.instancia.hablar(
+      AudioService.instancia.celebrarYDecir(
           '${_referencia.palabra.toLowerCase()} rima con ${_correcta.palabra.toLowerCase()}');
       await mostrarCelebracion(
         context,

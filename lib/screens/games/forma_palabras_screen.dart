@@ -180,10 +180,7 @@ class _FormaPalabrasScreenState extends State<FormaPalabrasScreen>
   Future<void> _completar() async {
     Jugadores.instancia.sumarYPasarTurno();
     PerfilesService.instancia.sumarEstrellaActivo('lectura');
-    AudioService.instancia.muyBien();
-    await Future.delayed(const Duration(milliseconds: 600));
-    if (!mounted) return;
-    _decirPalabra();
+    AudioService.instancia.celebrarYDecir(_palabraActual.palabra.toLowerCase());
     await mostrarCelebracion(
       context,
       subtitulo: '¡Formaste ${_palabraActual.palabra}!',
@@ -198,7 +195,7 @@ class _FormaPalabrasScreenState extends State<FormaPalabrasScreen>
   @override
   Widget build(BuildContext context) {
     return JuegoLayout(
-      titulo: 'Forma palabras',
+      titulo: 'Nombre de la letra',
       categoria: 'lectura',
       color: _color,
       simbolosTema: const ['A', 'B', 'C', 'a', 'b', 'c'],

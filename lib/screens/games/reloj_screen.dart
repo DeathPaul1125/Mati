@@ -80,8 +80,7 @@ class _RelojScreenState extends State<RelojScreen> {
     if (h.format() == _correcta.format()) {
       Jugadores.instancia.sumarYPasarTurno();
       PerfilesService.instancia.sumarEstrellaActivo('reloj');
-      AudioService.instancia.muyBien();
-      AudioService.instancia.hablar('Son ${_correcta.enPalabras()}');
+      AudioService.instancia.celebrarYDecir('Son ${_correcta.enPalabras()}');
       await mostrarCelebracion(
         context,
         subtitulo: 'Son ${_correcta.enPalabras()}',

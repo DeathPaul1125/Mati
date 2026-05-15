@@ -5,6 +5,7 @@ import '../widgets/icon_kid.dart';
 import 'games/animales_screen.dart';
 import 'games/aprender_letras_screen.dart';
 import 'games/aprender_numeros_screen.dart';
+import 'games/camino_secuencia_screen.dart';
 import 'games/caza_letra_screen.dart';
 import 'games/clasificar_screen.dart';
 import 'games/colores_screen.dart';
@@ -22,6 +23,7 @@ import 'games/letra_perdida_screen.dart';
 import 'games/logica_screen.dart';
 import 'games/matematicas_screen.dart';
 import 'games/mayor_menor_screen.dart';
+import 'games/memoria_espacial_screen.dart';
 import 'games/memoria_screen.dart';
 import 'games/opuestos_screen.dart';
 import 'games/patrones_screen.dart';
@@ -32,6 +34,7 @@ import 'games/restas_screen.dart';
 import 'games/rimas_screen.dart';
 import 'games/silabas_screen.dart';
 import 'games/sombras_screen.dart';
+import 'games/sonidos_animales_screen.dart';
 import 'games/sumas_screen.dart';
 import 'games/trazo_letras_screen.dart';
 import 'limite_alcanzado_screen.dart';
@@ -65,7 +68,7 @@ class HomeScreen extends StatelessWidget {
         SilabasScreen.new),
     Categoria('Letras Q.', '✨', Color(0xFFFFAE3D),
         LecturaScreen.new),
-    Categoria('Forma', '🧩', Color(0xFFE94B86),
+    Categoria('Nombre letra', '🧩', Color(0xFFE94B86),
         FormaPalabrasScreen.new),
     Categoria('Forma sílabas', '🧩', Color(0xFF7C4DFF),
         FormaSilabasScreen.new),
@@ -109,6 +112,10 @@ class HomeScreen extends StatelessWidget {
         OpuestosScreen.new),
     Categoria('Patrones', '🔴', Color(0xFF22C55E),
         PatronesScreen.new),
+    Categoria('Memoria espacial', '🧠', Color(0xFF7C4DFF),
+        MemoriaEspacialScreen.new),
+    Categoria('Camino', '🏠', Color(0xFF22C55E),
+        CaminoSecuenciaScreen.new),
   ];
 
   // Mundo y emociones: conocimiento general y sociales
@@ -127,6 +134,8 @@ class HomeScreen extends StatelessWidget {
         CuerpoScreen.new),
     Categoria('Profesiones', '🚒', Color(0xFF0EA5E9),
         ProfesionesScreen.new),
+    Categoria('Sonidos animales', '🐮', Color(0xFF8B5CF6),
+        SonidosAnimalesScreen.new),
   ];
 
   // Habilidades motrices y arte: trazo y creatividad
@@ -557,7 +566,7 @@ class _Ilustracion extends StatelessWidget {
         color: categoria.color,
       );
     }
-    if (t == 'Forma') {
+    if (t == 'Nombre letra') {
       return _PreviewTexto(
         textos: const ['T', 'A', 'C', 'O'],
         color: categoria.color,
