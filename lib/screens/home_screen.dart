@@ -34,7 +34,6 @@ import 'games/restas_screen.dart';
 import 'games/rimas_screen.dart';
 import 'games/silabas_screen.dart';
 import 'games/sombras_screen.dart';
-import 'games/sonidos_animales_screen.dart';
 import 'games/sumas_screen.dart';
 import 'games/trazo_letras_screen.dart';
 import 'limite_alcanzado_screen.dart';
@@ -134,8 +133,6 @@ class HomeScreen extends StatelessWidget {
         CuerpoScreen.new),
     Categoria('Profesiones', '🚒', Color(0xFF0EA5E9),
         ProfesionesScreen.new),
-    Categoria('Sonidos animales', '🐮', Color(0xFF8B5CF6),
-        SonidosAnimalesScreen.new),
   ];
 
   // Habilidades motrices y arte: trazo y creatividad

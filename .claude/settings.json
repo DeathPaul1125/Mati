@@ -16,7 +16,11 @@
       "Bash(python c:/tmp/extract_silabas.py)",
       "Bash(python c:/tmp/extract_silabas2.py)",
       "Bash(cp \"C:/Users/aceituno.pablo/Desktop/fluentui-emoji-main/assets/Person cartwheeling/Default/Color/person_cartwheeling_color_default.svg\" \"c:/laragon/www/juegos_kids/assets/fluent/1f938.svg\" && echo OK)",
-      "Bash(python c:/tmp/extract_juegos.py)"
+      "Bash(python c:/tmp/extract_juegos.py)",
+      "Bash(cp -r c:/laragon/www/juegos_kids c:/laragon/www/kids_games_en)",
+      "Bash(rm -rf c:/laragon/www/kids_games_en/build c:/laragon/www/kids_games_en/.dart_tool c:/laragon/www/kids_games_en/.idea)",
+      "Bash(python c:/tmp/translate_kids.py)",
+      "Bash(python c:/tmp/translate_kids2.py)"
     ],
     "additionalDirectories": [
       "\\tmp",
