@@ -6,7 +6,9 @@
       "Bash(python -c \"import cairosvg; print\\('cairo OK'\\)\")",
       "Bash(python tool/generate_icon.py)",
       "Bash(ls c:/laragon/www/juegos_kids/assets/openmoji/ | sed 's/\\\\.svg$//' | tr '[:upper:]' '[:lower:]' > /tmp/needed_codepoints.txt && wc -l /tmp/needed_codepoints.txt && head -10 /tmp/needed_codepoints.txt)",
-      "Bash(python c:/tmp/extract_fluent.py)"
+      "Bash(python c:/tmp/extract_fluent.py)",
+      "Bash(dart run *)",
+      "Bash(grep -i \"^ear$\\\\|ear \")"
     ],
     "additionalDirectories": [
       "\\tmp"

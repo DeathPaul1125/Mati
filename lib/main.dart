@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/zona_infantil_screen.dart';
+import 'screens/splash_animado_screen.dart';
 import 'state/grabaciones_service.dart';
 import 'state/perfiles_service.dart';
 import 'theme.dart';
@@ -45,7 +45,7 @@ class JuegosKidsApp extends StatelessWidget {
       title: 'Juegos Kids',
       debugShowCheckedModeBanner: false,
       theme: buildKidsTheme(),
-      home: const ZonaInfantilScreen(),
+      home: const SplashAnimadoScreen(),
     );
   }
 }

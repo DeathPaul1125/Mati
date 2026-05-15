@@ -71,6 +71,7 @@ flutter:
     - assets/twemoji/
     - assets/fluent/
     - assets/audio/
+    - assets/icon_fg.png
 
   fonts:
     - family: Fredoka

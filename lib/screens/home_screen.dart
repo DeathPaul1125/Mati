@@ -8,6 +8,7 @@ import 'games/aprender_numeros_screen.dart';
 import 'games/clasificar_screen.dart';
 import 'games/colores_screen.dart';
 import 'games/donde_esta_screen.dart';
+import 'games/escucha_letra_screen.dart';
 import 'games/formas_screen.dart';
 import 'games/lectura_screen.dart';
 import 'games/leer_palabra_screen.dart';
@@ -46,6 +47,8 @@ class HomeScreen extends StatelessWidget {
         DondeEstaScreen.new),
     Categoria('Letras', '📚', Color(0xFFFFAE3D),
         AprenderLetrasScreen.new),
+    Categoria('Escuchar', '🎵', Color(0xFFFF6FA3),
+        EscuchaLetraScreen.new),
     Categoria('Números', '🔢', Color(0xFF5B8DEF),
         AprenderNumerosScreen.new),
     Categoria('Colores', '🎨', Color(0xFFA855F7),
