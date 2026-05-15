@@ -22,7 +22,8 @@ class _SombrasScreenState extends State<SombrasScreen> {
   ];
 
   final _rng = Random();
-  late List<String> _items;
+  late List<String> _sombras;
+  late List<String> _dibujos;
   final Set<String> _emparejados = {};
 
   @override
@@ -34,15 +35,34 @@ class _SombrasScreenState extends State<SombrasScreen> {
   void _nuevaRonda() {
     final d = Dificultad.deEdad(
         PerfilesService.instancia.activo?.edad ?? 4);
-    _items = ([..._disponibles]..shuffle(_rng)).take(d.sombrasItems).toList();
+    _sombras = ([..._disponibles]..shuffle(_rng)).take(d.sombrasItems).toList();
+    // Los dibujos llevan otro orden distinto al de las sombras para que
+    // el niño tenga que buscar a qué sombra corresponde cada uno.
+    _dibujos = [..._sombras];
+    if (_dibujos.length > 1) {
+      var intentos = 0;
+      do {
+        _dibujos.shuffle(_rng);
+        intentos++;
+        // evitar el caso (raro) en que el shuffle deje todo en el mismo orden
+      } while (_listasIguales(_dibujos, _sombras) && intentos < 8);
+    }
     _emparejados.clear();
+  }
+
+  static bool _listasIguales(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 
   Future<void> _emparejar(String item) async {
     setState(() => _emparejados.add(item));
     Jugadores.instancia.sumarYPasarTurno();
     PerfilesService.instancia.sumarEstrellaActivo('sombras');
-    if (_emparejados.length == _items.length) {
+    if (_emparejados.length == _sombras.length) {
       await mostrarCelebracion(context, subtitulo: '¡Encontraste todas!');
       if (!mounted) return;
       setState(_nuevaRonda);
@@ -61,7 +81,7 @@ class _SombrasScreenState extends State<SombrasScreen> {
         builder: (context, orientation) {
           final landscape = orientation == Orientation.landscape;
 
-          final sombras = _items
+          final sombras = _sombras
               .map((item) => _Sombra(
                     item: item,
                     emparejado: _emparejados.contains(item),
@@ -69,7 +89,7 @@ class _SombrasScreenState extends State<SombrasScreen> {
                   ))
               .toList();
 
-          final dibujos = _items
+          final dibujos = _dibujos
               .where((item) => !_emparejados.contains(item))
               .map((item) => _DibujoArrastrable(
                     item: item,

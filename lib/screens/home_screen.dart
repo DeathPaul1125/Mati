@@ -8,7 +8,7 @@ import 'games/aprender_numeros_screen.dart';
 import 'games/clasificar_screen.dart';
 import 'games/colores_screen.dart';
 import 'games/donde_esta_screen.dart';
-import 'games/escucha_letra_screen.dart';
+import 'games/forma_palabras_screen.dart';
 import 'games/formas_screen.dart';
 import 'games/lectura_screen.dart';
 import 'games/leer_palabra_screen.dart';
@@ -47,8 +47,8 @@ class HomeScreen extends StatelessWidget {
         DondeEstaScreen.new),
     Categoria('Letras', '📚', Color(0xFFFFAE3D),
         AprenderLetrasScreen.new),
-    Categoria('Escuchar', '🎵', Color(0xFFFF6FA3),
-        EscuchaLetraScreen.new),
+    Categoria('Forma', '🧩', Color(0xFFE94B86),
+        FormaPalabrasScreen.new),
     Categoria('Números', '🔢', Color(0xFF5B8DEF),
         AprenderNumerosScreen.new),
     Categoria('Colores', '🎨', Color(0xFFA855F7),
@@ -496,6 +496,12 @@ class _Ilustracion extends StatelessWidget {
     if (t == 'Letras' || t == 'Letras Q.') {
       return _PreviewTexto(
         textos: const ['A', 'B', 'C'],
+        color: categoria.color,
+      );
+    }
+    if (t == 'Forma') {
+      return _PreviewTexto(
+        textos: const ['T', 'A', 'C', 'O'],
         color: categoria.color,
       );
     }

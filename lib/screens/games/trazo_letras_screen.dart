@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../state/audio_service.dart';
+import '../../state/jugadores.dart';
+import '../../state/perfiles_service.dart';
 import '../../theme.dart';
+import '../../widgets/icon_kid.dart';
 import '../../widgets/juego_layout.dart';
 
 class TrazoLetrasScreen extends StatefulWidget {
@@ -11,285 +14,62 @@ class TrazoLetrasScreen extends StatefulWidget {
   State<TrazoLetrasScreen> createState() => _TrazoLetrasScreenState();
 }
 
-class _TrazoLetra {
+class _LetraTrazo {
   final String letra;
+  final String palabra;
+  final String emoji;
   final List<List<Offset>> trazos;
-  const _TrazoLetra(this.letra, this.trazos);
+  const _LetraTrazo({
+    required this.letra,
+    required this.palabra,
+    required this.emoji,
+    required this.trazos,
+  });
 }
 
-class _TrazoLetrasScreenState extends State<TrazoLetrasScreen> {
-  static final List<_TrazoLetra> _letras = [
-    _TrazoLetra('I', [
-      _puntos(const Offset(0.5, 0.15), const Offset(0.5, 0.85), 12),
-    ]),
-    _TrazoLetra('L', [
-      _puntos(const Offset(0.30, 0.15), const Offset(0.30, 0.85), 12) +
-          _puntos(const Offset(0.30, 0.85), const Offset(0.80, 0.85), 6)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('T', [
-      _puntos(const Offset(0.15, 0.18), const Offset(0.85, 0.18), 10),
-      _puntos(const Offset(0.5, 0.18), const Offset(0.5, 0.85), 10),
-    ]),
-    _TrazoLetra('O', [
-      _arco(const Offset(0.5, 0.5), 0.32, 20),
-    ]),
-    _TrazoLetra('C', [
-      _arcoParcial(const Offset(0.55, 0.5), 0.32, 16, 5.50, 0.785),
-    ]),
-    _TrazoLetra('M', [
-      _puntos(const Offset(0.18, 0.85), const Offset(0.18, 0.18), 8) +
-          _puntos(const Offset(0.18, 0.18), const Offset(0.50, 0.55), 5)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.50, 0.55), const Offset(0.82, 0.18), 5)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.82, 0.18), const Offset(0.82, 0.85), 8)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('A', [
-      _puntos(const Offset(0.18, 0.85), const Offset(0.50, 0.15), 10) +
-          _puntos(const Offset(0.50, 0.15), const Offset(0.82, 0.85), 9)
-              .skip(1)
-              .toList(),
-      _puntos(const Offset(0.30, 0.62), const Offset(0.70, 0.62), 5),
-    ]),
-    _TrazoLetra('E', [
-      _puntos(const Offset(0.65, 0.18), const Offset(0.25, 0.18), 5) +
-          _puntos(const Offset(0.25, 0.18), const Offset(0.25, 0.85), 8)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.25, 0.85), const Offset(0.70, 0.85), 5)
-              .skip(1)
-              .toList(),
-      _puntos(const Offset(0.25, 0.51), const Offset(0.62, 0.51), 5),
-    ]),
-    _TrazoLetra('B', [
-      _puntos(const Offset(0.28, 0.15), const Offset(0.28, 0.85), 10),
-      _arcoParcial(const Offset(0.30, 0.32), 0.20, 8, -pi / 2, pi / 2) +
-          _arcoParcial(const Offset(0.30, 0.68), 0.22, 8, -pi / 2, pi / 2)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('D', [
-      _puntos(const Offset(0.28, 0.15), const Offset(0.28, 0.85), 10),
-      _arcoParcial(const Offset(0.30, 0.5), 0.36, 14, -pi / 2, pi / 2),
-    ]),
-    _TrazoLetra('F', [
-      _puntos(const Offset(0.65, 0.18), const Offset(0.25, 0.18), 5) +
-          _puntos(const Offset(0.25, 0.18), const Offset(0.25, 0.85), 8)
-              .skip(1)
-              .toList(),
-      _puntos(const Offset(0.25, 0.50), const Offset(0.58, 0.50), 5),
-    ]),
-    _TrazoLetra('G', [
-      _arcoParcial(const Offset(0.5, 0.5), 0.32, 14, 5.50, 0.785) +
-          _puntos(const Offset(0.726, 0.726), const Offset(0.726, 0.50), 4)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.726, 0.50), const Offset(0.55, 0.50), 3)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('H', [
-      _puntos(const Offset(0.25, 0.15), const Offset(0.25, 0.85), 10),
-      _puntos(const Offset(0.75, 0.15), const Offset(0.75, 0.85), 10),
-      _puntos(const Offset(0.25, 0.50), const Offset(0.75, 0.50), 6),
-    ]),
-    _TrazoLetra('J', [
-      _puntos(const Offset(0.65, 0.15), const Offset(0.65, 0.70), 8) +
-          _arcoParcial(const Offset(0.45, 0.70), 0.20, 6, 0, pi)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('K', [
-      _puntos(const Offset(0.25, 0.15), const Offset(0.25, 0.85), 10),
-      _puntos(const Offset(0.75, 0.18), const Offset(0.25, 0.50), 7),
-      _puntos(const Offset(0.25, 0.50), const Offset(0.75, 0.85), 7),
-    ]),
-    _TrazoLetra('N', [
-      _puntos(const Offset(0.25, 0.85), const Offset(0.25, 0.15), 9) +
-          _puntos(const Offset(0.25, 0.15), const Offset(0.75, 0.85), 9)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.75, 0.85), const Offset(0.75, 0.15), 9)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('Ñ', [
-      _puntos(const Offset(0.25, 0.85), const Offset(0.25, 0.30), 8) +
-          _puntos(const Offset(0.25, 0.30), const Offset(0.75, 0.85), 8)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.75, 0.85), const Offset(0.75, 0.30), 8)
-              .skip(1)
-              .toList(),
-      _arcoParcial(const Offset(0.5, 0.12), 0.15, 5, pi, 0),
-    ]),
-    _TrazoLetra('P', [
-      _puntos(const Offset(0.28, 0.85), const Offset(0.28, 0.15), 10),
-      _arcoParcial(const Offset(0.30, 0.30), 0.22, 8, -pi / 2, pi / 2),
-    ]),
-    _TrazoLetra('Q', [
-      _arco(const Offset(0.5, 0.45), 0.30, 18),
-      _puntos(const Offset(0.65, 0.65), const Offset(0.85, 0.88), 6),
-    ]),
-    _TrazoLetra('R', [
-      _puntos(const Offset(0.28, 0.85), const Offset(0.28, 0.15), 10),
-      _arcoParcial(const Offset(0.30, 0.30), 0.22, 8, -pi / 2, pi / 2) +
-          _puntos(const Offset(0.30, 0.52), const Offset(0.75, 0.85), 7)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('S', [
-      _arcoParcial(const Offset(0.5, 0.30), 0.22, 8, -0.3, pi + 0.3) +
-          _arcoParcial(const Offset(0.5, 0.68), 0.22, 8, pi + 0.3, 2 * pi - 0.3)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('U', [
-      _puntos(const Offset(0.22, 0.15), const Offset(0.22, 0.65), 7) +
-          _arcoParcial(const Offset(0.50, 0.65), 0.28, 8, pi, 2 * pi)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.78, 0.65), const Offset(0.78, 0.15), 7)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('V', [
-      _puntos(const Offset(0.18, 0.15), const Offset(0.50, 0.85), 9) +
-          _puntos(const Offset(0.50, 0.85), const Offset(0.82, 0.15), 9)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('W', [
-      _puntos(const Offset(0.10, 0.15), const Offset(0.30, 0.85), 6) +
-          _puntos(const Offset(0.30, 0.85), const Offset(0.50, 0.40), 5)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.50, 0.40), const Offset(0.70, 0.85), 5)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.70, 0.85), const Offset(0.90, 0.15), 6)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('X', [
-      _puntos(const Offset(0.20, 0.15), const Offset(0.80, 0.85), 9),
-      _puntos(const Offset(0.80, 0.15), const Offset(0.20, 0.85), 9),
-    ]),
-    _TrazoLetra('Y', [
-      _puntos(const Offset(0.20, 0.15), const Offset(0.50, 0.50), 6),
-      _puntos(const Offset(0.80, 0.15), const Offset(0.50, 0.50), 6) +
-          _puntos(const Offset(0.50, 0.50), const Offset(0.50, 0.85), 6)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('Z', [
-      _puntos(const Offset(0.20, 0.18), const Offset(0.80, 0.18), 6) +
-          _puntos(const Offset(0.80, 0.18), const Offset(0.20, 0.82), 9)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.20, 0.82), const Offset(0.80, 0.82), 6)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('0', [
-      _arco(const Offset(0.5, 0.5), 0.32, 18),
-    ]),
-    _TrazoLetra('1', [
-      _puntos(const Offset(0.35, 0.30), const Offset(0.50, 0.15), 4) +
-          _puntos(const Offset(0.50, 0.15), const Offset(0.50, 0.85), 10)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('2', [
-      _arcoParcial(const Offset(0.50, 0.30), 0.25, 8, -pi, 0.5) +
-          _puntos(const Offset(0.75, 0.40), const Offset(0.22, 0.85), 9)
-              .skip(1)
-              .toList() +
-          _puntos(const Offset(0.22, 0.85), const Offset(0.80, 0.85), 6)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('3', [
-      _arcoParcial(const Offset(0.45, 0.32), 0.25, 8, -pi + 0.2, pi / 2) +
-          _arcoParcial(const Offset(0.45, 0.68), 0.25, 8, -pi / 2, pi - 0.2)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('4', [
-      _puntos(const Offset(0.65, 0.15), const Offset(0.22, 0.60), 8) +
-          _puntos(const Offset(0.22, 0.60), const Offset(0.78, 0.60), 6)
-              .skip(1)
-              .toList(),
-      _puntos(const Offset(0.65, 0.20), const Offset(0.65, 0.85), 8),
-    ]),
-    _TrazoLetra('5', [
-      _puntos(const Offset(0.72, 0.18), const Offset(0.28, 0.18), 5) +
-          _puntos(const Offset(0.28, 0.18), const Offset(0.28, 0.45), 5)
-              .skip(1)
-              .toList() +
-          _arcoParcial(const Offset(0.48, 0.62), 0.28, 8, -pi / 2 - 0.3, pi / 2 + 0.3)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('6', [
-      _arcoParcial(const Offset(0.55, 0.40), 0.30, 10, -0.4, -pi) +
-          _arcoParcial(const Offset(0.50, 0.68), 0.25, 10, pi, -pi)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('7', [
-      _puntos(const Offset(0.22, 0.18), const Offset(0.80, 0.18), 7) +
-          _puntos(const Offset(0.80, 0.18), const Offset(0.40, 0.85), 10)
-              .skip(1)
-              .toList(),
-    ]),
-    _TrazoLetra('8', [
-      _arco(const Offset(0.50, 0.32), 0.20, 12) +
-          _arco(const Offset(0.50, 0.68), 0.22, 12).skip(1).toList(),
-    ]),
-    _TrazoLetra('9', [
-      _arco(const Offset(0.50, 0.35), 0.22, 12) +
-          _puntos(const Offset(0.72, 0.35), const Offset(0.55, 0.85), 8)
-              .skip(1)
-              .toList(),
-    ]),
+class _TrazoLetrasScreenState extends State<TrazoLetrasScreen>
+    with SingleTickerProviderStateMixin {
+  static final List<_LetraTrazo> _letras = _construirLetras();
+
+  static const _coloresLetra = <Color>[
+    Color(0xFFFF6B7A),
+    Color(0xFFFFAE3D),
+    Color(0xFF22C55E),
+    Color(0xFF42C8E2),
+    Color(0xFFA855F7),
+    Color(0xFFE94B86),
+    Color(0xFF4ECDA4),
+    Color(0xFF5B8DEF),
   ];
-
-  static List<Offset> _puntos(Offset a, Offset b, int n) {
-    return List.generate(n, (i) {
-      final t = i / (n - 1);
-      return Offset.lerp(a, b, t)!;
-    });
-  }
-
-  static List<Offset> _arco(Offset c, double r, int n) {
-    return List.generate(n, (i) {
-      final ang = -pi / 2 + i * 2 * pi / n;
-      return Offset(c.dx + r * cos(ang), c.dy + r * sin(ang));
-    });
-  }
-
-  static List<Offset> _arcoParcial(
-      Offset c, double r, int n, double inicio, double fin) {
-    return List.generate(n, (i) {
-      final t = i / (n - 1);
-      final ang = inicio + t * (fin - inicio);
-      return Offset(c.dx + r * cos(ang), c.dy + r * sin(ang));
-    });
-  }
 
   int _letraIdx = 0;
   int _trazoActual = 0;
   int _puntoActual = 0;
   bool _animandoExito = false;
+  late final AnimationController _pulso;
 
-  _TrazoLetra get _letra => _letras[_letraIdx];
+  _LetraTrazo get _letra => _letras[_letraIdx];
+  Color get _colorLetra => _coloresLetra[_letraIdx % _coloresLetra.length];
+  bool get _completo {
+    if (_trazoActual >= _letra.trazos.length) return true;
+    return _trazoActual == _letra.trazos.length - 1 &&
+        _puntoActual >= _letra.trazos.last.length;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pulso = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _pulso.dispose();
+    super.dispose();
+  }
 
   void _reset() {
     setState(() {
@@ -337,11 +117,16 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen> {
 
   Future<void> _completar() async {
     setState(() => _animandoExito = true);
+    Jugadores.instancia.sumarYPasarTurno();
+    PerfilesService.instancia.sumarEstrellaActivo('trazo');
     AudioService.instancia.muyBien();
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(milliseconds: 700));
     if (!mounted) return;
-    AudioService.instancia.letra(_letra.letra);
-    await mostrarCelebracion(context, subtitulo: 'Trazaste la ${_letra.letra}');
+    AudioService.instancia.letra(_letra.letra, palabraEjemplo: _letra.palabra);
+    await mostrarCelebracion(
+      context,
+      subtitulo: '${_letra.letra} de ${_letra.palabra}',
+    );
     if (!mounted) return;
     _siguienteLetra();
   }
@@ -351,31 +136,25 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen> {
     return JuegoLayout(
       titulo: 'Trazar',
       categoria: 'trazo',
-      color: const Color(0xFF42C8E2),
-      simbolosTema: const ['A', 'B', 'C'],
+      color: _colorLetra,
+      simbolosTema: const ['A', 'B', 'C', 'D'],
       audioInstruccion: 'instr_trazar',
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+        padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
         child: Column(
           children: [
-            const Text(
-              'Desliza el dedo sobre la letra',
-              style: TextStyle(
-                fontFamily: kFuente,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: KidsColors.texto,
-              ),
-              textAlign: TextAlign.center,
+            _Encabezado(
+              letra: _letra,
+              indice: _letraIdx + 1,
+              total: _letras.length,
+              color: _colorLetra,
             ),
             const SizedBox(height: 8),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final canvasSize = Size(
-                    constraints.maxWidth,
-                    constraints.maxHeight,
-                  );
+                  final canvasSize =
+                      Size(constraints.maxWidth, constraints.maxHeight);
                   return GestureDetector(
                     onPanUpdate: (d) =>
                         _onPan(d.localPosition, canvasSize),
@@ -383,18 +162,34 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen> {
                         _onPan(d.localPosition, canvasSize),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white,
+                            Color.lerp(_colorLetra, Colors.white, 0.92)!,
+                          ],
+                        ),
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: sombraTarjeta,
-                      ),
-                      child: CustomPaint(
-                        painter: _TrazoPainter(
-                          letra: _letra,
-                          trazoActual: _trazoActual,
-                          puntoActual: _puntoActual,
-                          completo: _animandoExito,
+                        border: Border.all(
+                          color: _colorLetra.withValues(alpha: 0.25),
+                          width: 3,
                         ),
-                        size: Size.infinite,
+                      ),
+                      child: AnimatedBuilder(
+                        animation: _pulso,
+                        builder: (_, _) => CustomPaint(
+                          painter: _TrazoPainter(
+                            letra: _letra,
+                            color: _colorLetra,
+                            trazoActual: _trazoActual,
+                            puntoActual: _puntoActual,
+                            completo: _animandoExito,
+                            pulso: _pulso.value,
+                          ),
+                          size: Size.infinite,
+                        ),
                       ),
                     ),
                   );
@@ -411,15 +206,22 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen> {
                   color: const Color(0xFFFF9F45),
                   onTap: _reset,
                 ),
-                const SizedBox(width: 14),
-                _BotonAccion(
-                  icono: Icons.arrow_forward_rounded,
-                  etiqueta: 'Otra letra',
-                  color: const Color(0xFF42C8E2),
-                  onTap: _siguienteLetra,
-                ),
               ],
             ),
+            if (!_completo)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  'Termina el trazo para pasar a la siguiente letra',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: KidsColors.textoSuave.withValues(alpha: 0.85),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -427,30 +229,126 @@ class _TrazoLetrasScreenState extends State<TrazoLetrasScreen> {
   }
 }
 
+class _Encabezado extends StatelessWidget {
+  final _LetraTrazo letra;
+  final int indice;
+  final int total;
+  final Color color;
+
+  const _Encabezado({
+    required this.letra,
+    required this.indice,
+    required this.total,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: sombraSuave,
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              gradient: gradienteCategoria(color),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.4),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              letra.letra,
+              style: const TextStyle(
+                fontFamily: kFuente,
+                fontSize: 34,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          IconKid(letra.emoji, size: 42),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  letra.palabra,
+                  style: const TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: KidsColors.texto,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  'Letra $indice de $total',
+                  style: TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _TrazoPainter extends CustomPainter {
-  final _TrazoLetra letra;
+  final _LetraTrazo letra;
+  final Color color;
   final int trazoActual;
   final int puntoActual;
   final bool completo;
+  final double pulso;
 
   _TrazoPainter({
     required this.letra,
+    required this.color,
     required this.trazoActual,
     required this.puntoActual,
     required this.completo,
+    required this.pulso,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
+    final lado = min(w, h);
 
-    Offset px(Offset n) => Offset(n.dx * w, n.dy * h);
+    // Centrar y escalar el trazado para que use el espacio cuadrado
+    final escala = lado * 0.92;
+    final ox = (w - escala) / 2;
+    final oy = (h - escala) / 2;
+    Offset px(Offset n) => Offset(ox + n.dx * escala, oy + n.dy * escala);
 
-    // Fondo de la letra grande en gris claro
+    final anchoTrazo = escala * 0.16;
+
+    // Fondo de la letra grande en color suave
     final estiloFondo = Paint()
-      ..color = const Color(0xFF7FCFE5).withValues(alpha: 0.20)
-      ..strokeWidth = w * 0.18
+      ..color = color.withValues(alpha: 0.18)
+      ..strokeWidth = anchoTrazo
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
       ..style = PaintingStyle.stroke;
@@ -463,10 +361,10 @@ class _TrazoPainter extends CustomPainter {
       canvas.drawPath(path, estiloFondo);
     }
 
-    // Trazo activo (completado) en azul fuerte
+    // Trazo activo (completado) con color vivo
     final estiloActivo = Paint()
-      ..color = const Color(0xFF2BAFD3)
-      ..strokeWidth = w * 0.16
+      ..color = color
+      ..strokeWidth = anchoTrazo * 0.92
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
       ..style = PaintingStyle.stroke;
@@ -474,14 +372,12 @@ class _TrazoPainter extends CustomPainter {
     for (var ti = 0; ti < letra.trazos.length; ti++) {
       final trazo = letra.trazos[ti];
       if (ti < trazoActual || completo) {
-        // Trazo ya completado
         final path = Path()..moveTo(px(trazo.first).dx, px(trazo.first).dy);
         for (final p in trazo.skip(1)) {
           path.lineTo(px(p).dx, px(p).dy);
         }
         canvas.drawPath(path, estiloActivo);
       } else if (ti == trazoActual && puntoActual > 0) {
-        // Trazo en progreso, hasta puntoActual
         final path = Path()..moveTo(px(trazo.first).dx, px(trazo.first).dy);
         for (var i = 1; i <= puntoActual && i < trazo.length; i++) {
           path.lineTo(px(trazo[i]).dx, px(trazo[i]).dy);
@@ -490,7 +386,7 @@ class _TrazoPainter extends CustomPainter {
       }
     }
 
-    // Puntos guía
+    // Puntos guía sobre el trazo
     for (var ti = 0; ti < letra.trazos.length; ti++) {
       final trazo = letra.trazos[ti];
       for (var i = 0; i < trazo.length; i++) {
@@ -499,38 +395,83 @@ class _TrazoPainter extends CustomPainter {
         final yaPasado = completo ||
             ti < trazoActual ||
             (ti == trazoActual && i < puntoActual);
+        final r = esActual ? 9.0 : 4.0;
 
-        final r = esActual ? 14.0 : 6.0;
+        if (yaPasado) continue;
+
+        canvas.drawCircle(
+          p,
+          r,
+          Paint()..color = Colors.white,
+        );
         canvas.drawCircle(
           p,
           r,
           Paint()
-            ..color = yaPasado
-                ? Colors.white
-                : esActual
-                    ? Colors.white
-                    : Colors.white.withValues(alpha: 0.85),
+            ..color = color.withValues(alpha: 0.45)
+            ..strokeWidth = 1.5
+            ..style = PaintingStyle.stroke,
         );
-        if (esActual) {
-          canvas.drawCircle(
-            p,
-            r,
-            Paint()
-              ..color = const Color(0xFFFFC83D)
-              ..strokeWidth = 4
-              ..style = PaintingStyle.stroke,
-          );
-          // Chevron flotante
-          final chevron = Paint()
-            ..color = const Color(0xFF66BB6A)
+      }
+    }
+
+    // Indicador pulsante en el punto activo
+    if (!completo &&
+        trazoActual < letra.trazos.length &&
+        puntoActual < letra.trazos[trazoActual].length) {
+      final p = px(letra.trazos[trazoActual][puntoActual]);
+      final pulseRadio = 18.0 + pulso * 14.0;
+
+      canvas.drawCircle(
+        p,
+        pulseRadio,
+        Paint()..color = color.withValues(alpha: 0.18 * (1.0 - pulso * 0.5)),
+      );
+      canvas.drawCircle(
+        p,
+        16,
+        Paint()..color = Colors.white,
+      );
+      canvas.drawCircle(
+        p,
+        16,
+        Paint()
+          ..color = color
+          ..strokeWidth = 4
+          ..style = PaintingStyle.stroke,
+      );
+
+      // Si es el inicio de un trazo, mostrar flecha
+      if (puntoActual == 0 && letra.trazos[trazoActual].length > 1) {
+        final p2 = px(letra.trazos[trazoActual][1]);
+        final dir = p2 - p;
+        final d = dir.distance;
+        if (d > 0) {
+          final ux = dir.dx / d;
+          final uy = dir.dy / d;
+          final start = Offset(p.dx + ux * 22, p.dy + uy * 22);
+          final end = Offset(p.dx + ux * 40, p.dy + uy * 40);
+          final flecha = Paint()
+            ..color = color
             ..strokeWidth = 5
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke;
-          final cy = p.dy - 28;
-          canvas.drawLine(Offset(p.dx - 8, cy - 4),
-              Offset(p.dx, cy + 4), chevron);
-          canvas.drawLine(Offset(p.dx, cy + 4),
-              Offset(p.dx + 8, cy - 4), chevron);
+          canvas.drawLine(start, end, flecha);
+          // Punta de flecha
+          final angulo = atan2(uy, ux);
+          const cabeza = 10.0;
+          canvas.drawLine(
+            end,
+            Offset(end.dx - cabeza * cos(angulo - 0.5),
+                end.dy - cabeza * sin(angulo - 0.5)),
+            flecha,
+          );
+          canvas.drawLine(
+            end,
+            Offset(end.dx - cabeza * cos(angulo + 0.5),
+                end.dy - cabeza * sin(angulo + 0.5)),
+            flecha,
+          );
         }
       }
     }
@@ -541,6 +482,7 @@ class _TrazoPainter extends CustomPainter {
       old.trazoActual != trazoActual ||
       old.puntoActual != puntoActual ||
       old.completo != completo ||
+      old.pulso != pulso ||
       old.letra.letra != letra.letra;
 }
 
@@ -568,12 +510,12 @@ class _BotonAccion extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icono, color: Colors.white, size: 22),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Text(
                 etiqueta,
                 style: const TextStyle(
@@ -589,4 +531,353 @@ class _BotonAccion extends StatelessWidget {
       ),
     );
   }
+}
+
+// ---------------------------------------------------------------------------
+// Construcción de los trazos del abecedario en orden A → Z (incluyendo Ñ).
+// ---------------------------------------------------------------------------
+
+List<Offset> _linea(Offset a, Offset b, int n) {
+  return List.generate(n, (i) {
+    final t = i / (n - 1);
+    return Offset.lerp(a, b, t)!;
+  });
+}
+
+List<Offset> _arco(Offset c, double r, int n, double inicio, double fin) {
+  return List.generate(n, (i) {
+    final t = i / (n - 1);
+    final ang = inicio + t * (fin - inicio);
+    return Offset(c.dx + r * cos(ang), c.dy + r * sin(ang));
+  });
+}
+
+List<Offset> _circulo(Offset c, double r, int n) {
+  return List.generate(n, (i) {
+    final ang = -pi / 2 + i * 2 * pi / n;
+    return Offset(c.dx + r * cos(ang), c.dy + r * sin(ang));
+  });
+}
+
+List<Offset> _concat(List<List<Offset>> partes) {
+  final out = <Offset>[];
+  for (var i = 0; i < partes.length; i++) {
+    out.addAll(i == 0 ? partes[i] : partes[i].skip(1));
+  }
+  return out;
+}
+
+List<_LetraTrazo> _construirLetras() {
+  return [
+    _LetraTrazo(
+      letra: 'A',
+      palabra: 'Árbol',
+      emoji: '🌳',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.18, 0.88), const Offset(0.50, 0.12), 10),
+          _linea(const Offset(0.50, 0.12), const Offset(0.82, 0.88), 10),
+        ]),
+        _linea(const Offset(0.30, 0.62), const Offset(0.70, 0.62), 6),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'B',
+      palabra: 'Banana',
+      emoji: '🍌',
+      trazos: [
+        _linea(const Offset(0.28, 0.12), const Offset(0.28, 0.88), 11),
+        _concat([
+          _arco(const Offset(0.30, 0.32), 0.21, 8, -pi / 2, pi / 2),
+          _arco(const Offset(0.30, 0.68), 0.23, 8, -pi / 2, pi / 2),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'C',
+      palabra: 'Cachorro',
+      emoji: '🐶',
+      trazos: [
+        _arco(const Offset(0.58, 0.50), 0.32, 14, -0.6, 2 * pi - pi - 0.6),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'D',
+      palabra: 'Dulce',
+      emoji: '🍩',
+      trazos: [
+        _linea(const Offset(0.28, 0.12), const Offset(0.28, 0.88), 11),
+        _arco(const Offset(0.30, 0.50), 0.36, 14, -pi / 2, pi / 2),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'E',
+      palabra: 'Elefante',
+      emoji: '🐘',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.72, 0.18), const Offset(0.25, 0.18), 6),
+          _linea(const Offset(0.25, 0.18), const Offset(0.25, 0.85), 9),
+          _linea(const Offset(0.25, 0.85), const Offset(0.74, 0.85), 6),
+        ]),
+        _linea(const Offset(0.25, 0.51), const Offset(0.64, 0.51), 5),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'F',
+      palabra: 'Fresa',
+      emoji: '🍓',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.72, 0.18), const Offset(0.25, 0.18), 6),
+          _linea(const Offset(0.25, 0.18), const Offset(0.25, 0.88), 9),
+        ]),
+        _linea(const Offset(0.25, 0.50), const Offset(0.60, 0.50), 5),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'G',
+      palabra: 'Gato',
+      emoji: '🐱',
+      trazos: [
+        _concat([
+          _arco(const Offset(0.50, 0.50), 0.32, 14, -0.6, 2 * pi - pi - 0.6),
+          _linea(const Offset(0.50, 0.50), const Offset(0.78, 0.50), 5),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'H',
+      palabra: 'Helado',
+      emoji: '🍦',
+      trazos: [
+        _linea(const Offset(0.25, 0.12), const Offset(0.25, 0.88), 11),
+        _linea(const Offset(0.75, 0.12), const Offset(0.75, 0.88), 11),
+        _linea(const Offset(0.25, 0.50), const Offset(0.75, 0.50), 6),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'I',
+      palabra: 'Iguana',
+      emoji: '🦎',
+      trazos: [
+        _linea(const Offset(0.50, 0.15), const Offset(0.50, 0.85), 12),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'J',
+      palabra: 'Jirafa',
+      emoji: '🦒',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.65, 0.15), const Offset(0.65, 0.68), 8),
+          _arco(const Offset(0.45, 0.68), 0.20, 7, 0, pi),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'K',
+      palabra: 'Koala',
+      emoji: '🐨',
+      trazos: [
+        _linea(const Offset(0.25, 0.12), const Offset(0.25, 0.88), 11),
+        _linea(const Offset(0.75, 0.18), const Offset(0.25, 0.50), 7),
+        _linea(const Offset(0.25, 0.50), const Offset(0.75, 0.88), 7),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'L',
+      palabra: 'León',
+      emoji: '🦁',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.30, 0.12), const Offset(0.30, 0.85), 10),
+          _linea(const Offset(0.30, 0.85), const Offset(0.78, 0.85), 6),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'M',
+      palabra: 'Manzana',
+      emoji: '🍎',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.18, 0.88), const Offset(0.18, 0.15), 9),
+          _linea(const Offset(0.18, 0.15), const Offset(0.50, 0.58), 6),
+          _linea(const Offset(0.50, 0.58), const Offset(0.82, 0.15), 6),
+          _linea(const Offset(0.82, 0.15), const Offset(0.82, 0.88), 9),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'N',
+      palabra: 'Nube',
+      emoji: '☁️',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.25, 0.88), const Offset(0.25, 0.12), 10),
+          _linea(const Offset(0.25, 0.12), const Offset(0.75, 0.88), 10),
+          _linea(const Offset(0.75, 0.88), const Offset(0.75, 0.12), 10),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'Ñ',
+      palabra: 'Ñandú',
+      emoji: '🦤',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.25, 0.85), const Offset(0.25, 0.28), 8),
+          _linea(const Offset(0.25, 0.28), const Offset(0.75, 0.85), 9),
+          _linea(const Offset(0.75, 0.85), const Offset(0.75, 0.28), 8),
+        ]),
+        _arco(const Offset(0.50, 0.13), 0.15, 6, pi, 2 * pi),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'O',
+      palabra: 'Oso',
+      emoji: '🐻',
+      trazos: [
+        _circulo(const Offset(0.50, 0.50), 0.34, 18),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'P',
+      palabra: 'Pizza',
+      emoji: '🍕',
+      trazos: [
+        _linea(const Offset(0.28, 0.88), const Offset(0.28, 0.12), 11),
+        _arco(const Offset(0.30, 0.30), 0.22, 8, -pi / 2, pi / 2),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'Q',
+      palabra: 'Queso',
+      emoji: '🧀',
+      trazos: [
+        _circulo(const Offset(0.50, 0.45), 0.32, 18),
+        _linea(const Offset(0.62, 0.62), const Offset(0.85, 0.88), 6),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'R',
+      palabra: 'Ratón',
+      emoji: '🐭',
+      trazos: [
+        _linea(const Offset(0.28, 0.88), const Offset(0.28, 0.12), 11),
+        _concat([
+          _arco(const Offset(0.30, 0.30), 0.22, 8, -pi / 2, pi / 2),
+          _linea(const Offset(0.30, 0.52), const Offset(0.78, 0.88), 8),
+        ]),
+      ],
+    ),
+    // S corregida: trazo continuo con 18 waypoints que dibujan una S limpia.
+    _LetraTrazo(
+      letra: 'S',
+      palabra: 'Sol',
+      emoji: '🌞',
+      trazos: [
+        const [
+          Offset(0.72, 0.20),
+          Offset(0.62, 0.14),
+          Offset(0.50, 0.12),
+          Offset(0.38, 0.14),
+          Offset(0.27, 0.20),
+          Offset(0.22, 0.30),
+          Offset(0.24, 0.40),
+          Offset(0.32, 0.46),
+          Offset(0.45, 0.49),
+          Offset(0.58, 0.52),
+          Offset(0.70, 0.58),
+          Offset(0.77, 0.68),
+          Offset(0.75, 0.78),
+          Offset(0.66, 0.86),
+          Offset(0.50, 0.88),
+          Offset(0.35, 0.86),
+          Offset(0.26, 0.80),
+          Offset(0.22, 0.72),
+        ],
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'T',
+      palabra: 'Tigre',
+      emoji: '🐯',
+      trazos: [
+        _linea(const Offset(0.15, 0.18), const Offset(0.85, 0.18), 9),
+        _linea(const Offset(0.50, 0.18), const Offset(0.50, 0.88), 10),
+      ],
+    ),
+    // U corregida: la curva inferior ahora va realmente hacia abajo.
+    _LetraTrazo(
+      letra: 'U',
+      palabra: 'Uva',
+      emoji: '🍇',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.22, 0.15), const Offset(0.22, 0.62), 7),
+          _arco(const Offset(0.50, 0.62), 0.28, 9, pi, 0),
+          _linea(const Offset(0.78, 0.62), const Offset(0.78, 0.15), 7),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'V',
+      palabra: 'Vaca',
+      emoji: '🐮',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.18, 0.15), const Offset(0.50, 0.88), 10),
+          _linea(const Offset(0.50, 0.88), const Offset(0.82, 0.15), 10),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'W',
+      palabra: 'Wifi',
+      emoji: '📶',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.10, 0.15), const Offset(0.30, 0.88), 7),
+          _linea(const Offset(0.30, 0.88), const Offset(0.50, 0.40), 6),
+          _linea(const Offset(0.50, 0.40), const Offset(0.70, 0.88), 6),
+          _linea(const Offset(0.70, 0.88), const Offset(0.90, 0.15), 7),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'X',
+      palabra: 'Xilófono',
+      emoji: '🎵',
+      trazos: [
+        _linea(const Offset(0.18, 0.15), const Offset(0.82, 0.88), 10),
+        _linea(const Offset(0.82, 0.15), const Offset(0.18, 0.88), 10),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'Y',
+      palabra: 'Yate',
+      emoji: '⛵',
+      trazos: [
+        _linea(const Offset(0.20, 0.15), const Offset(0.50, 0.50), 7),
+        _concat([
+          _linea(const Offset(0.80, 0.15), const Offset(0.50, 0.50), 7),
+          _linea(const Offset(0.50, 0.50), const Offset(0.50, 0.88), 6),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'Z',
+      palabra: 'Zorro',
+      emoji: '🦊',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.20, 0.18), const Offset(0.80, 0.18), 7),
+          _linea(const Offset(0.80, 0.18), const Offset(0.20, 0.82), 10),
+          _linea(const Offset(0.20, 0.82), const Offset(0.80, 0.82), 7),
+        ]),
+      ],
+    ),
+  ];
 }
