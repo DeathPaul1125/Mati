@@ -8,6 +8,7 @@ import 'games/aprender_numeros_screen.dart';
 import 'games/clasificar_screen.dart';
 import 'games/colores_screen.dart';
 import 'games/donde_esta_screen.dart';
+import 'games/emociones_screen.dart';
 import 'games/forma_palabras_screen.dart';
 import 'games/formas_screen.dart';
 import 'games/lectura_screen.dart';
@@ -15,7 +16,10 @@ import 'games/leer_palabra_screen.dart';
 import 'games/logica_screen.dart';
 import 'games/matematicas_screen.dart';
 import 'games/memoria_screen.dart';
+import 'games/opuestos_screen.dart';
 import 'games/pintar_screen.dart';
+import 'games/reloj_screen.dart';
+import 'games/restas_screen.dart';
 import 'games/sombras_screen.dart';
 import 'games/sumas_screen.dart';
 import 'games/trazo_letras_screen.dart';
@@ -59,6 +63,10 @@ class HomeScreen extends StatelessWidget {
         AnimalesScreen.new),
     Categoria('Trazar', '✍️', Color(0xFF42C8E2),
         TrazoLetrasScreen.new),
+    Categoria('Opuestos', '🐘', Color(0xFF14B8A6),
+        OpuestosScreen.new),
+    Categoria('Emociones', '🙂', Color(0xFFFFB347),
+        EmocionesScreen.new),
   ];
 
   static const _juega = [
@@ -66,6 +74,10 @@ class HomeScreen extends StatelessWidget {
         MatematicasScreen.new),
     Categoria('Sumar', '➕', Color(0xFF42C8E2),
         SumasScreen.new),
+    Categoria('Restar', '➖', Color(0xFFEF4444),
+        RestasScreen.new),
+    Categoria('Reloj', '🕒', Color(0xFF06B6D4),
+        RelojScreen.new),
     Categoria('Parejas', '🧠', Color(0xFF4ECDA4),
         MemoriaScreen.new),
     Categoria('Lógica', '🧩', Color(0xFFFF6B7A),

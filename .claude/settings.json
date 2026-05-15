@@ -8,7 +8,10 @@
       "Bash(ls c:/laragon/www/juegos_kids/assets/openmoji/ | sed 's/\\\\.svg$//' | tr '[:upper:]' '[:lower:]' > /tmp/needed_codepoints.txt && wc -l /tmp/needed_codepoints.txt && head -10 /tmp/needed_codepoints.txt)",
       "Bash(python c:/tmp/extract_fluent.py)",
       "Bash(dart run *)",
-      "Bash(grep -i \"^ear$\\\\|ear \")"
+      "Bash(grep -i \"^ear$\\\\|ear \")",
+      "Bash(python c:/tmp/extract_faces.py)",
+      "Bash(grep -iE \"^\\(one|two|three|six\\) o.clock$|^slightly smiling\")",
+      "Bash(python c:/tmp/extract_extras.py)"
     ],
     "additionalDirectories": [
       "\\tmp"

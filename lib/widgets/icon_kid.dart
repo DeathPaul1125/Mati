@@ -2,6 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../state/perfiles_service.dart';
 
+/// Codepoints que solo se distribuyen en el set Fluent (caras de emociones
+/// que no están en los packs Twemoji/OpenMoji incluidos).
+const Set<String> _soloFluent = {
+  '1f600', // feliz
+  '1f60d', // enamorado
+  '1f622', // triste
+  '1f62d', // llorando
+  '1f620', // enojado
+  '1f632', // sorprendido
+  '1f634', // cansado
+  '1f628', // asustado
+  '1f642', // sonrisa leve (card de Emociones)
+  '1f552', // reloj de las tres (card de Reloj)
+};
+
 String _codepointFromEmoji(String emoji) {
   final runes = emoji.runes.where((r) => r != 0xFE0F).toList();
   return runes
@@ -28,11 +43,15 @@ class IconKid extends StatelessWidget {
       builder: (context, _) {
         final estilo = PerfilesService.instancia.estiloIconos;
         final code = _codepointFromEmoji(emoji);
+        final codeLower = code.toLowerCase();
         final String asset;
-        if (estilo == PerfilesService.estiloFluent) {
-          asset = 'assets/fluent/${code.toLowerCase()}.svg';
+        // Algunos iconos (caras de emociones, etc.) solo existen en Fluent,
+        // así que se fuerza Fluent para esos codepoints.
+        if (_soloFluent.contains(codeLower) ||
+            estilo == PerfilesService.estiloFluent) {
+          asset = 'assets/fluent/$codeLower.svg';
         } else if (estilo == PerfilesService.estiloTwemoji) {
-          asset = 'assets/twemoji/${code.toLowerCase()}.svg';
+          asset = 'assets/twemoji/$codeLower.svg';
         } else {
           asset = 'assets/openmoji/$code.svg';
         }
