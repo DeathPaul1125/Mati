@@ -36,6 +36,16 @@ class _FormaSilabasScreenState extends State<FormaSilabasScreen>
     _PalabraSilabica('🏠', ['CA', 'SA']),
     _PalabraSilabica('🌹', ['RO', 'SA']),
     _PalabraSilabica('🐶', ['PE', 'RRO']),
+    _PalabraSilabica('🐻', ['O', 'SO']),
+    _PalabraSilabica('🍐', ['PE', 'RA']),
+    _PalabraSilabica('🍋', ['LI', 'MA']),
+    _PalabraSilabica('🍍', ['PI', 'ÑA']),
+    _PalabraSilabica('🐸', ['RA', 'NA']),
+    _PalabraSilabica('🥔', ['PA', 'PA']),
+    _PalabraSilabica('🍯', ['MI', 'EL']),
+    _PalabraSilabica('🐭', ['RA', 'TO']),
+    _PalabraSilabica('🥚', ['HUE', 'VO']),
+    _PalabraSilabica('🦴', ['HUE', 'SO']),
   ];
 
   // 3 sílabas
@@ -45,12 +55,19 @@ class _FormaSilabasScreenState extends State<FormaSilabasScreen>
     _PalabraSilabica('🦒', ['JI', 'RA', 'FA']),
     _PalabraSilabica('🐥', ['PO', 'LLI', 'TO']),
     _PalabraSilabica('🦁', ['LE', 'O', 'N']),
+    _PalabraSilabica('🍅', ['TO', 'MA', 'TE']),
+    _PalabraSilabica('🐝', ['A', 'BE', 'JA']),
+    _PalabraSilabica('🍦', ['HE', 'LA', 'DO']),
+    _PalabraSilabica('🌽', ['MA', 'I', 'Z']),
+    _PalabraSilabica('🍉', ['SAN', 'DI', 'A']),
   ];
 
   // 4 sílabas
   static const _dificiles = <_PalabraSilabica>[
     _PalabraSilabica('🦋', ['MA', 'RI', 'PO', 'SA']),
     _PalabraSilabica('🦎', ['LA', 'GAR', 'TO']),
+    _PalabraSilabica('🐘', ['E', 'LE', 'FAN', 'TE']),
+    _PalabraSilabica('🥕', ['ZA', 'NA', 'HO', 'RIA']),
   ];
 
   final _rng = Random();

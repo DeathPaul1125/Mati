@@ -12,10 +12,14 @@
       "Bash(python c:/tmp/extract_faces.py)",
       "Bash(grep -iE \"^\\(one|two|three|six\\) o.clock$|^slightly smiling\")",
       "Bash(python c:/tmp/extract_extras.py)",
-      "Bash(python c:/tmp/extract_extras2.py)"
+      "Bash(python c:/tmp/extract_extras2.py)",
+      "Bash(python c:/tmp/extract_silabas.py)",
+      "Bash(python c:/tmp/extract_silabas2.py)",
+      "Bash(cp \"C:/Users/aceituno.pablo/Desktop/fluentui-emoji-main/assets/Person cartwheeling/Default/Color/person_cartwheeling_color_default.svg\" \"c:/laragon/www/juegos_kids/assets/fluent/1f938.svg\" && echo OK)"
     ],
     "additionalDirectories": [
-      "\\tmp"
+      "\\tmp",
+      "C:\\Users\\aceituno.pablo\\Desktop\\fluentui-emoji-main\\assets\\Person cartwheeling\\Default\\Color"
     ]
   }
 }

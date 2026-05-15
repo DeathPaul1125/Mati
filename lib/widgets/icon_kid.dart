@@ -17,6 +17,23 @@ const Set<String> _soloFluent = {
   '1f552', // reloj de las tres (card de Reloj)
   '1f524', // letras latinas (card de Sílabas)
   '1f3af', // diana (card de Caza letra)
+  // Comida y frutas para palabras silábicas
+  '1f350', // pera
+  '1f34b', // limón
+  '1f34d', // piña
+  '1f345', // tomate
+  '1f36f', // miel
+  '1f33d', // maíz
+  '1f344', // hongo
+  '1f955', // zanahoria
+  '1f95a', // huevo
+  '1f954', // papa
+  '1f438', // rana
+  '1f331', // semilla
+  '1fa91', // silla
+  '1f938', // gimnasta
+  '1f41b', // gusano
+  '1f9b4', // hueso
 };
 
 String _codepointFromEmoji(String emoji) {
