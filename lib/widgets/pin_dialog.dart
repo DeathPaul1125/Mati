@@ -172,3 +172,175 @@ Future<bool> pedirPin(BuildContext context) async {
   );
   return ok ?? false;
 }
+
+/// Diálogo para cambiar el PIN. Asume que el usuario ya está autenticado
+/// (en la Zona padres). Pide el nuevo PIN dos veces y lo guarda.
+class CambiarPinDialog extends StatefulWidget {
+  const CambiarPinDialog({super.key});
+
+  @override
+  State<CambiarPinDialog> createState() => _CambiarPinDialogState();
+}
+
+enum _PasoCambioPin { nuevo, confirmar }
+
+class _CambiarPinDialogState extends State<CambiarPinDialog> {
+  _PasoCambioPin _paso = _PasoCambioPin.nuevo;
+  String _pinNuevo = '';
+  String _pinConfirmar = '';
+  bool _error = false;
+
+  String get _pinActual =>
+      _paso == _PasoCambioPin.nuevo ? _pinNuevo : _pinConfirmar;
+
+  set _pinActual(String v) {
+    if (_paso == _PasoCambioPin.nuevo) {
+      _pinNuevo = v;
+    } else {
+      _pinConfirmar = v;
+    }
+  }
+
+  void _agregar(String d) {
+    if (_pinActual.length >= 4) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _pinActual = _pinActual + d;
+      _error = false;
+    });
+    if (_pinActual.length == 4) {
+      Future.delayed(const Duration(milliseconds: 150), _avanzar);
+    }
+  }
+
+  void _borrar() {
+    if (_pinActual.isEmpty) return;
+    setState(() => _pinActual = _pinActual.substring(0, _pinActual.length - 1));
+  }
+
+  Future<void> _avanzar() async {
+    if (_paso == _PasoCambioPin.nuevo) {
+      setState(() {
+        _paso = _PasoCambioPin.confirmar;
+        _error = false;
+      });
+    } else {
+      if (_pinNuevo == _pinConfirmar) {
+        await PerfilesService.instancia.establecerPin(_pinNuevo);
+        if (!mounted) return;
+        Navigator.of(context).pop(true);
+      } else {
+        HapticFeedback.heavyImpact();
+        setState(() {
+          _error = true;
+          _pinNuevo = '';
+          _pinConfirmar = '';
+          _paso = _PasoCambioPin.nuevo;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final esConfirmar = _paso == _PasoCambioPin.confirmar;
+    final titulo = esConfirmar ? 'Confirma el PIN nuevo' : 'PIN nuevo';
+    final subtitulo = _error
+        ? 'Los PIN no coinciden, intenta otra vez'
+        : esConfirmar
+            ? 'Vuelve a escribir el PIN nuevo'
+            : 'Escribe 4 dígitos';
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 360),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.lock_reset_rounded,
+                size: 48, color: KidsColors.texto),
+            const SizedBox(height: 8),
+            Text(
+              titulo,
+              style: const TextStyle(
+                fontFamily: kFuente,
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: KidsColors.texto,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitulo,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: kFuente,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: _error ? KidsColors.error : KidsColors.textoSuave,
+              ),
+            ),
+            const SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(4, (i) {
+                final lleno = i < _pinActual.length;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  margin: const EdgeInsets.symmetric(horizontal: 6),
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: lleno ? KidsColors.texto : Colors.transparent,
+                    border: Border.all(color: KidsColors.texto, width: 2),
+                    shape: BoxShape.circle,
+                  ),
+                );
+              }),
+            ),
+            const SizedBox(height: 20),
+            GridView.count(
+              crossAxisCount: 3,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 1.5,
+              children: [
+                for (var i = 1; i <= 9; i++)
+                  _Tecla(label: '$i', onTap: () => _agregar('$i')),
+                _Tecla(label: '', onTap: () {}),
+                _Tecla(label: '0', onTap: () => _agregar('0')),
+                _Tecla(label: '⌫', onTap: _borrar),
+              ],
+            ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(
+                  fontFamily: kFuente,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: KidsColors.textoSuave,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Future<bool> cambiarPin(BuildContext context) async {
+  final ok = await showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const CambiarPinDialog(),
+  );
+  return ok ?? false;
+}

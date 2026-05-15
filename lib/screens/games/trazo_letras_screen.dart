@@ -598,7 +598,9 @@ List<_LetraTrazo> _construirLetras() {
       palabra: 'Cachorro',
       emoji: '🐶',
       trazos: [
-        _arco(const Offset(0.58, 0.50), 0.32, 14, -0.6, 2 * pi - pi - 0.6),
+        // 270° abierto a la derecha: empieza arriba-derecha, sube al tope,
+        // baja por la izquierda, pasa por el fondo y termina abajo-derecha.
+        _arco(const Offset(0.50, 0.50), 0.34, 16, -pi / 4, -7 * pi / 4),
       ],
     ),
     _LetraTrazo(
@@ -641,8 +643,11 @@ List<_LetraTrazo> _construirLetras() {
       emoji: '🐱',
       trazos: [
         _concat([
-          _arco(const Offset(0.50, 0.50), 0.32, 14, -0.6, 2 * pi - pi - 0.6),
-          _linea(const Offset(0.50, 0.50), const Offset(0.78, 0.50), 5),
+          // Misma C correcta…
+          _arco(const Offset(0.50, 0.50), 0.34, 16, -pi / 4, -7 * pi / 4),
+          // …y un gancho desde la esquina inferior-derecha hacia el centro.
+          _linea(const Offset(0.74, 0.74), const Offset(0.74, 0.50), 5),
+          _linea(const Offset(0.74, 0.50), const Offset(0.54, 0.50), 4),
         ]),
       ],
     ),
@@ -876,6 +881,311 @@ List<_LetraTrazo> _construirLetras() {
           _linea(const Offset(0.20, 0.18), const Offset(0.80, 0.18), 7),
           _linea(const Offset(0.80, 0.18), const Offset(0.20, 0.82), 10),
           _linea(const Offset(0.20, 0.82), const Offset(0.80, 0.82), 7),
+        ]),
+      ],
+    ),
+
+    // ============================================================
+    // Minúsculas (a → z) — cuerpo en y=[0.35, 0.85] con ascendentes
+    // hasta y=0.10 y descendentes hasta y=0.92.
+    // ============================================================
+    _LetraTrazo(
+      letra: 'a',
+      palabra: 'árbol',
+      emoji: '🌳',
+      trazos: [
+        _circulo(const Offset(0.42, 0.62), 0.22, 16),
+        _linea(const Offset(0.64, 0.42), const Offset(0.64, 0.85), 7),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'b',
+      palabra: 'banana',
+      emoji: '🍌',
+      trazos: [
+        _linea(const Offset(0.30, 0.12), const Offset(0.30, 0.85), 11),
+        _arco(const Offset(0.30, 0.65), 0.20, 10, -pi / 2, pi / 2),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'c',
+      palabra: 'cachorro',
+      emoji: '🐶',
+      trazos: [
+        _arco(const Offset(0.55, 0.62), 0.25, 14, -pi / 4, -7 * pi / 4),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'd',
+      palabra: 'dulce',
+      emoji: '🍩',
+      trazos: [
+        _circulo(const Offset(0.42, 0.62), 0.22, 16),
+        _linea(const Offset(0.64, 0.12), const Offset(0.64, 0.85), 11),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'e',
+      palabra: 'elefante',
+      emoji: '🐘',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.66, 0.62), const Offset(0.30, 0.62), 6),
+          _arco(const Offset(0.48, 0.62), 0.18, 13, pi, 2 * pi + 0.4),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'f',
+      palabra: 'fresa',
+      emoji: '🍓',
+      trazos: [
+        _concat([
+          _arco(const Offset(0.50, 0.25), 0.15, 7, 0, -pi),
+          _linea(const Offset(0.35, 0.25), const Offset(0.35, 0.85), 9),
+        ]),
+        _linea(const Offset(0.20, 0.50), const Offset(0.55, 0.50), 5),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'g',
+      palabra: 'gato',
+      emoji: '🐱',
+      trazos: [
+        _circulo(const Offset(0.42, 0.62), 0.22, 16),
+        _concat([
+          _linea(const Offset(0.64, 0.42), const Offset(0.64, 0.88), 8),
+          _linea(const Offset(0.64, 0.88), const Offset(0.40, 0.92), 4),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'h',
+      palabra: 'helado',
+      emoji: '🍦',
+      trazos: [
+        _linea(const Offset(0.30, 0.12), const Offset(0.30, 0.85), 11),
+        _concat([
+          _arco(const Offset(0.46, 0.55), 0.16, 8, -pi, 0),
+          _linea(const Offset(0.62, 0.55), const Offset(0.62, 0.85), 6),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'i',
+      palabra: 'iguana',
+      emoji: '🦎',
+      trazos: [
+        _linea(const Offset(0.50, 0.42), const Offset(0.50, 0.85), 9),
+        _circulo(const Offset(0.50, 0.25), 0.045, 6),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'j',
+      palabra: 'jirafa',
+      emoji: '🦒',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.55, 0.42), const Offset(0.55, 0.83), 8),
+          _arco(const Offset(0.42, 0.83), 0.13, 6, 0, pi),
+        ]),
+        _circulo(const Offset(0.55, 0.25), 0.045, 6),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'k',
+      palabra: 'koala',
+      emoji: '🐨',
+      trazos: [
+        _linea(const Offset(0.30, 0.12), const Offset(0.30, 0.85), 11),
+        _linea(const Offset(0.60, 0.50), const Offset(0.30, 0.68), 6),
+        _linea(const Offset(0.30, 0.68), const Offset(0.60, 0.85), 6),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'l',
+      palabra: 'león',
+      emoji: '🦁',
+      trazos: [
+        _linea(const Offset(0.50, 0.12), const Offset(0.50, 0.85), 11),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'm',
+      palabra: 'manzana',
+      emoji: '🍎',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.18, 0.85), const Offset(0.18, 0.45), 6),
+          _linea(const Offset(0.18, 0.45), const Offset(0.40, 0.45), 4),
+          _linea(const Offset(0.40, 0.45), const Offset(0.40, 0.85), 6),
+        ]),
+        _concat([
+          _linea(const Offset(0.40, 0.45), const Offset(0.62, 0.45), 4),
+          _linea(const Offset(0.62, 0.45), const Offset(0.62, 0.85), 6),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'n',
+      palabra: 'nube',
+      emoji: '☁️',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.30, 0.85), const Offset(0.30, 0.45), 6),
+          _linea(const Offset(0.30, 0.45), const Offset(0.62, 0.45), 5),
+          _linea(const Offset(0.62, 0.45), const Offset(0.62, 0.85), 6),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'ñ',
+      palabra: 'ñandú',
+      emoji: '🦤',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.30, 0.85), const Offset(0.30, 0.55), 5),
+          _linea(const Offset(0.30, 0.55), const Offset(0.62, 0.55), 5),
+          _linea(const Offset(0.62, 0.55), const Offset(0.62, 0.85), 5),
+        ]),
+        _arco(const Offset(0.46, 0.32), 0.13, 6, pi, 2 * pi),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'o',
+      palabra: 'oso',
+      emoji: '🐻',
+      trazos: [
+        _circulo(const Offset(0.50, 0.62), 0.23, 16),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'p',
+      palabra: 'pizza',
+      emoji: '🍕',
+      trazos: [
+        _linea(const Offset(0.28, 0.92), const Offset(0.28, 0.42), 9),
+        _arco(const Offset(0.28, 0.57), 0.16, 9, -pi / 2, pi / 2),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'q',
+      palabra: 'queso',
+      emoji: '🧀',
+      trazos: [
+        _circulo(const Offset(0.40, 0.62), 0.22, 16),
+        _linea(const Offset(0.62, 0.42), const Offset(0.62, 0.92), 9),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'r',
+      palabra: 'ratón',
+      emoji: '🐭',
+      trazos: [
+        _concat([
+          _arco(const Offset(0.42, 0.50), 0.13, 6, -pi / 3, -pi),
+          _linea(const Offset(0.29, 0.50), const Offset(0.29, 0.85), 6),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 's',
+      palabra: 'sol',
+      emoji: '🌞',
+      trazos: [
+        const [
+          Offset(0.65, 0.46),
+          Offset(0.55, 0.40),
+          Offset(0.43, 0.40),
+          Offset(0.33, 0.45),
+          Offset(0.28, 0.53),
+          Offset(0.34, 0.61),
+          Offset(0.46, 0.63),
+          Offset(0.58, 0.66),
+          Offset(0.66, 0.73),
+          Offset(0.65, 0.81),
+          Offset(0.55, 0.85),
+          Offset(0.42, 0.85),
+          Offset(0.31, 0.81),
+          Offset(0.27, 0.74),
+        ],
+      ],
+    ),
+    _LetraTrazo(
+      letra: 't',
+      palabra: 'tigre',
+      emoji: '🐯',
+      trazos: [
+        _linea(const Offset(0.45, 0.20), const Offset(0.45, 0.85), 10),
+        _linea(const Offset(0.28, 0.45), const Offset(0.60, 0.45), 5),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'u',
+      palabra: 'uva',
+      emoji: '🍇',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.30, 0.45), const Offset(0.30, 0.67), 5),
+          _arco(const Offset(0.45, 0.67), 0.15, 8, pi, 0),
+          _linea(const Offset(0.60, 0.67), const Offset(0.60, 0.45), 5),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'v',
+      palabra: 'vaca',
+      emoji: '🐮',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.25, 0.45), const Offset(0.50, 0.85), 8),
+          _linea(const Offset(0.50, 0.85), const Offset(0.75, 0.45), 8),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'w',
+      palabra: 'wifi',
+      emoji: '📶',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.12, 0.45), const Offset(0.30, 0.85), 6),
+          _linea(const Offset(0.30, 0.85), const Offset(0.50, 0.55), 5),
+          _linea(const Offset(0.50, 0.55), const Offset(0.70, 0.85), 5),
+          _linea(const Offset(0.70, 0.85), const Offset(0.88, 0.45), 6),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'x',
+      palabra: 'xilófono',
+      emoji: '🎵',
+      trazos: [
+        _linea(const Offset(0.25, 0.45), const Offset(0.65, 0.85), 8),
+        _linea(const Offset(0.65, 0.45), const Offset(0.25, 0.85), 8),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'y',
+      palabra: 'yate',
+      emoji: '⛵',
+      trazos: [
+        _linea(const Offset(0.25, 0.45), const Offset(0.50, 0.70), 6),
+        _concat([
+          _linea(const Offset(0.65, 0.45), const Offset(0.50, 0.70), 4),
+          _linea(const Offset(0.50, 0.70), const Offset(0.30, 0.92), 5),
+        ]),
+      ],
+    ),
+    _LetraTrazo(
+      letra: 'z',
+      palabra: 'zorro',
+      emoji: '🦊',
+      trazos: [
+        _concat([
+          _linea(const Offset(0.25, 0.45), const Offset(0.65, 0.45), 5),
+          _linea(const Offset(0.65, 0.45), const Offset(0.25, 0.85), 8),
+          _linea(const Offset(0.25, 0.85), const Offset(0.65, 0.85), 5),
         ]),
       ],
     ),

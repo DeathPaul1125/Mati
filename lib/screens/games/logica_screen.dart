@@ -92,24 +92,29 @@ class _LogicaScreenState extends State<LogicaScreen> {
         builder: (context, orientation) {
           final landscape = orientation == Orientation.landscape;
 
-          final grid = LayoutBuilder(
-            builder: (context, constraints) {
-              final maxExtent = landscape ? 160.0 : 200.0;
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: maxExtent,
-                  crossAxisSpacing: 14,
-                  mainAxisSpacing: 14,
-                  childAspectRatio: 1.0,
-                ),
-                itemCount: _opciones.length,
-                itemBuilder: (context, i) {
-                  final item = _opciones[i];
-                  return _ItemArrastrable(
-                    item: item,
-                    onCancelado: () => mostrarErrorSuave(context),
-                  );
-                },
+          // Columnas adaptativas según cuántos items haya y la orientación,
+          // para garantizar que TODAS las opciones se vean sin recortar.
+          int columnas;
+          if (landscape) {
+            columnas = _opciones.length <= 4 ? 2 : 3;
+          } else {
+            columnas = _opciones.length <= 4 ? 2 : 3;
+          }
+          final grid = GridView.builder(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: columnas,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: _opciones.length,
+            itemBuilder: (context, i) {
+              final item = _opciones[i];
+              return _ItemArrastrable(
+                item: item,
+                onCancelado: () => mostrarErrorSuave(context),
               );
             },
           );
@@ -128,12 +133,12 @@ class _LogicaScreenState extends State<LogicaScreen> {
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: activo
                       ? Colors.white
                       : Colors.white.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: activo ? KidsColors.logica : Colors.transparent,
                     width: 3,
@@ -148,7 +153,7 @@ class _LogicaScreenState extends State<LogicaScreen> {
                 child: Center(
                   child: Text(
                     activo ? '🗑️ 😋' : '🗑️',
-                    style: TextStyle(fontSize: landscape ? 70 : 64),
+                    style: TextStyle(fontSize: landscape ? 56 : 44),
                   ),
                 ),
               );
@@ -198,30 +203,32 @@ class _LogicaScreenState extends State<LogicaScreen> {
           }
 
           return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+            padding: const EdgeInsets.fromLTRB(14, 2, 14, 10),
             child: Column(
               children: [
-                Text(
+                const Text(
                   '¿Cuál es diferente?',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: const Color(0xFF333355),
-                      ),
+                  style: TextStyle(
+                    fontFamily: kFuente,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF333355),
+                  ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
                 const Text(
                   'Arrástralo a la papelera',
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
+                    fontFamily: kFuente,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                     color: Color(0xFF555577),
                   ),
                 ),
-                const SizedBox(height: 16),
-                Expanded(child: grid),
                 const SizedBox(height: 8),
+                Expanded(child: grid),
+                const SizedBox(height: 6),
                 papelera,
-                const SizedBox(height: 4),
               ],
             ),
           );
@@ -238,18 +245,25 @@ class _ItemArrastrable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final card = TarjetaGrande(
-      child: IconKid(item, size: 100, sombra: true),
+    final card = LayoutBuilder(
+      builder: (context, c) {
+        final lado = min(c.maxWidth, c.maxHeight);
+        return TarjetaGrande(
+          padding: const EdgeInsets.all(6),
+          child: IconKid(item, size: lado * 0.62, sombra: true),
+        );
+      },
     );
     return Draggable<String>(
       data: item,
       feedback: Material(
         color: Colors.transparent,
         child: SizedBox(
-          width: 140,
-          height: 140,
+          width: 120,
+          height: 120,
           child: TarjetaGrande(
-            child: IconKid(item, size: 108),
+            padding: const EdgeInsets.all(6),
+            child: IconKid(item, size: 84),
           ),
         ),
       ),

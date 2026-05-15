@@ -237,6 +237,8 @@ class _ContenidoEstadisticas extends StatelessWidget {
         const SizedBox(height: 18),
         const _BotonGrabaciones(),
         const SizedBox(height: 14),
+        const _BotonCambiarPin(),
+        const SizedBox(height: 14),
         const _SelectorEstiloIconos(),
       ],
     );
@@ -291,6 +293,99 @@ class _BotonGrabaciones extends StatelessWidget {
                     SizedBox(height: 2),
                     Text(
                       'Reemplaza la voz del sistema con la tuya',
+                      style: TextStyle(
+                        fontFamily: kFuente,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded,
+                  color: Colors.white, size: 28),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BotonCambiarPin extends StatelessWidget {
+  const _BotonCambiarPin();
+
+  Future<void> _abrir(BuildContext context) async {
+    final ok = await cambiarPin(context);
+    if (!context.mounted) return;
+    if (ok) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            backgroundColor: KidsColors.exito,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            content: const Text(
+              'PIN cambiado correctamente',
+              style: TextStyle(
+                fontFamily: kFuente,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFF7C4DFF),
+      borderRadius: BorderRadius.circular(24),
+      elevation: 4,
+      shadowColor: const Color(0x557C4DFF),
+      child: InkWell(
+        onTap: () => _abrir(context),
+        borderRadius: BorderRadius.circular(24),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: const Icon(Icons.lock_reset_rounded,
+                    color: Colors.white, size: 28),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Cambiar PIN',
+                      style: TextStyle(
+                        fontFamily: kFuente,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Elige una nueva clave de 4 dígitos',
                       style: TextStyle(
                         fontFamily: kFuente,
                         fontSize: 13,
