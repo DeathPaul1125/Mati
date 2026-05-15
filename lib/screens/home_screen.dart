@@ -8,20 +8,28 @@ import 'games/aprender_numeros_screen.dart';
 import 'games/caza_letra_screen.dart';
 import 'games/clasificar_screen.dart';
 import 'games/colores_screen.dart';
+import 'games/conectar_puntos_screen.dart';
+import 'games/cuerpo_screen.dart';
 import 'games/donde_esta_screen.dart';
 import 'games/emociones_screen.dart';
 import 'games/forma_palabras_screen.dart';
 import 'games/forma_silabas_screen.dart';
 import 'games/formas_screen.dart';
+import 'games/laberinto_screen.dart';
 import 'games/lectura_screen.dart';
 import 'games/leer_palabra_screen.dart';
+import 'games/letra_perdida_screen.dart';
 import 'games/logica_screen.dart';
 import 'games/matematicas_screen.dart';
+import 'games/mayor_menor_screen.dart';
 import 'games/memoria_screen.dart';
 import 'games/opuestos_screen.dart';
+import 'games/patrones_screen.dart';
 import 'games/pintar_screen.dart';
+import 'games/profesiones_screen.dart';
 import 'games/reloj_screen.dart';
 import 'games/restas_screen.dart';
+import 'games/rimas_screen.dart';
 import 'games/silabas_screen.dart';
 import 'games/sombras_screen.dart';
 import 'games/sumas_screen.dart';
@@ -49,32 +57,32 @@ class _Seccion {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static const _aprende = [
-    Categoria('¿Dónde está?', '👶', Color(0xFFFF8FB1),
-        DondeEstaScreen.new),
+  // Lectura y letras: vocabulario, sonidos, sílabas y palabras
+  static const _lectura = [
     Categoria('Letras', '📚', Color(0xFFFFAE3D),
         AprenderLetrasScreen.new),
-    Categoria('Forma', '🧩', Color(0xFFE94B86),
-        FormaPalabrasScreen.new),
     Categoria('Sílabas', '🔤', Color(0xFFFF6B7A),
         SilabasScreen.new),
-    Categoria('Números', '🔢', Color(0xFF5B8DEF),
-        AprenderNumerosScreen.new),
-    Categoria('Colores', '🎨', Color(0xFFA855F7),
-        ColoresScreen.new),
-    Categoria('Formas', '⬢', Color(0xFF22C55E),
-        FormasScreen.new),
-    Categoria('Animales', '🦊', Color(0xFFFF8A65),
-        AnimalesScreen.new),
-    Categoria('Trazar', '✍️', Color(0xFF42C8E2),
-        TrazoLetrasScreen.new),
-    Categoria('Opuestos', '🐘', Color(0xFF14B8A6),
-        OpuestosScreen.new),
-    Categoria('Emociones', '🙂', Color(0xFFFFB347),
-        EmocionesScreen.new),
+    Categoria('Letras Q.', '✨', Color(0xFFFFAE3D),
+        LecturaScreen.new),
+    Categoria('Forma', '🧩', Color(0xFFE94B86),
+        FormaPalabrasScreen.new),
+    Categoria('Forma sílabas', '🧩', Color(0xFF7C4DFF),
+        FormaSilabasScreen.new),
+    Categoria('Leer', '📖', Color(0xFFF59E0B),
+        LeerPalabraScreen.new),
+    Categoria('Caza letra', '🎯', Color(0xFF06B6D4),
+        CazaLetraScreen.new),
+    Categoria('Rimas', '🎵', Color(0xFF8B5CF6),
+        RimasScreen.new),
+    Categoria('Letra perdida', '❓', Color(0xFFEC4899),
+        LetraPerdidaScreen.new),
   ];
 
-  static const _juega = [
+  // Matemática: números, conteo, operaciones, tiempo
+  static const _matematica = [
+    Categoria('Números', '🔢', Color(0xFF5B8DEF),
+        AprenderNumerosScreen.new),
     Categoria('Contar', '🍎', Color(0xFF7C4DFF),
         MatematicasScreen.new),
     Categoria('Sumar', '➕', Color(0xFF42C8E2),
@@ -83,6 +91,12 @@ class HomeScreen extends StatelessWidget {
         RestasScreen.new),
     Categoria('Reloj', '🕒', Color(0xFF06B6D4),
         RelojScreen.new),
+    Categoria('Más o menos', '⚖', Color(0xFF0EA5E9),
+        MayorMenorScreen.new),
+  ];
+
+  // Lógica y memoria: razonamiento, atención, clasificación
+  static const _logica = [
     Categoria('Parejas', '🧠', Color(0xFF4ECDA4),
         MemoriaScreen.new),
     Categoria('Lógica', '🧩', Color(0xFFFF6B7A),
@@ -91,17 +105,38 @@ class HomeScreen extends StatelessWidget {
         SombrasScreen.new),
     Categoria('Clasificar', '📦', Color(0xFFB47BD8),
         ClasificarScreen.new),
-    Categoria('Letras Q.', '✨', Color(0xFFFFAE3D),
-        LecturaScreen.new),
-    Categoria('Leer', '📖', Color(0xFFF59E0B),
-        LeerPalabraScreen.new),
-    Categoria('Forma sílabas', '🧩', Color(0xFF7C4DFF),
-        FormaSilabasScreen.new),
-    Categoria('Caza letra', '🎯', Color(0xFF06B6D4),
-        CazaLetraScreen.new),
+    Categoria('Opuestos', '🐘', Color(0xFF14B8A6),
+        OpuestosScreen.new),
+    Categoria('Patrones', '🔴', Color(0xFF22C55E),
+        PatronesScreen.new),
   ];
 
-  static const _crea = [
+  // Mundo y emociones: conocimiento general y sociales
+  static const _mundo = [
+    Categoria('¿Dónde está?', '👶', Color(0xFFFF8FB1),
+        DondeEstaScreen.new),
+    Categoria('Animales', '🦊', Color(0xFFFF8A65),
+        AnimalesScreen.new),
+    Categoria('Colores', '🎨', Color(0xFFA855F7),
+        ColoresScreen.new),
+    Categoria('Formas', '⬢', Color(0xFF22C55E),
+        FormasScreen.new),
+    Categoria('Emociones', '🙂', Color(0xFFFFB347),
+        EmocionesScreen.new),
+    Categoria('Mi cuerpo', '👀', Color(0xFFEC4899),
+        CuerpoScreen.new),
+    Categoria('Profesiones', '🚒', Color(0xFF0EA5E9),
+        ProfesionesScreen.new),
+  ];
+
+  // Habilidades motrices y arte: trazo y creatividad
+  static const _motrices = [
+    Categoria('Trazar', '✍️', Color(0xFF42C8E2),
+        TrazoLetrasScreen.new),
+    Categoria('Laberinto', '🐭', Color(0xFFFF6B7A),
+        LaberintoScreen.new),
+    Categoria('Conectar puntos', '✨', Color(0xFFFF6B7A),
+        ConectarPuntosScreen.new),
     Categoria('Pintar', '🎨', Color(0xFFE94B86),
         PintarScreen.new),
   ];
@@ -124,9 +159,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const secciones = [
-      _Seccion('Aprende', _aprende),
-      _Seccion('Juega y aprende', _juega),
-      _Seccion('Crea', _crea),
+      _Seccion('Lectura y letras', _lectura),
+      _Seccion('Matemática', _matematica),
+      _Seccion('Lógica y memoria', _logica),
+      _Seccion('Mundo y emociones', _mundo),
+      _Seccion('Arte y motricidad', _motrices),
     ];
     return Scaffold(
       body: Container(

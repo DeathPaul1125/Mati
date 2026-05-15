@@ -67,7 +67,7 @@ class _RestasScreenState extends State<RestasScreen> {
     }
     Jugadores.instancia.sumarYPasarTurno();
     PerfilesService.instancia.sumarEstrellaActivo('sumas');
-    AudioService.instancia.muyBien();
+    AudioService.instancia.celebrarConNumero(_resultado);
     await mostrarCelebracion(
       context,
       subtitulo: '$_a − $_b = $_resultado',

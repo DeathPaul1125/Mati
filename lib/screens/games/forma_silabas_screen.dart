@@ -178,10 +178,7 @@ class _FormaSilabasScreenState extends State<FormaSilabasScreen>
   Future<void> _completar() async {
     Jugadores.instancia.sumarYPasarTurno();
     PerfilesService.instancia.sumarEstrellaActivo('lectura');
-    AudioService.instancia.muyBien();
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (!mounted) return;
-    AudioService.instancia.hablar(_palabra.palabra.toLowerCase());
+    AudioService.instancia.celebrarYDecir(_palabra.palabra.toLowerCase());
     await mostrarCelebracion(
       context,
       subtitulo: '${_palabra.silabas.join('-')}  =  ${_palabra.palabra}',

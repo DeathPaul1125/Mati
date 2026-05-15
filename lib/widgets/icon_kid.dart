@@ -34,6 +34,16 @@ const Set<String> _soloFluent = {
   '1f938', // gimnasta
   '1f41b', // gusano
   '1f9b4', // hueso
+  // Partes del cuerpo
+  '1f440', '1f442', '1f443', '1f444',
+  '1f590', '1f9b6', '1f9b5', '1f9b7',
+  // Profesiones
+  '1f692', '1f693', '1f373', '1f680',
+  '1fa7a', '1f33e', '1f527',
+  // Círculos de colores (Patrones)
+  '1f534', '1f535', '1f7e2', '1f7e1',
+  // Otros
+  '1f4d6', '1f4a1',
 };
 
 String _codepointFromEmoji(String emoji) {

@@ -76,7 +76,7 @@ class _SumasScreenState extends State<SumasScreen> {
     }
     Jugadores.instancia.sumarYPasarTurno();
     PerfilesService.instancia.sumarEstrellaActivo('sumas');
-    AudioService.instancia.muyBien();
+    AudioService.instancia.celebrarConNumero(_resultado);
     await mostrarCelebracion(
       context,
       subtitulo: _esSuma
