@@ -11,7 +11,8 @@
       "Bash(grep -i \"^ear$\\\\|ear \")",
       "Bash(python c:/tmp/extract_faces.py)",
       "Bash(grep -iE \"^\\(one|two|three|six\\) o.clock$|^slightly smiling\")",
-      "Bash(python c:/tmp/extract_extras.py)"
+      "Bash(python c:/tmp/extract_extras.py)",
+      "Bash(python c:/tmp/extract_extras2.py)"
     ],
     "additionalDirectories": [
       "\\tmp"

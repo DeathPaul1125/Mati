@@ -15,6 +15,8 @@ const Set<String> _soloFluent = {
   '1f628', // asustado
   '1f642', // sonrisa leve (card de Emociones)
   '1f552', // reloj de las tres (card de Reloj)
+  '1f524', // letras latinas (card de Sílabas)
+  '1f3af', // diana (card de Caza letra)
 };
 
 String _codepointFromEmoji(String emoji) {

@@ -5,11 +5,13 @@ import '../widgets/icon_kid.dart';
 import 'games/animales_screen.dart';
 import 'games/aprender_letras_screen.dart';
 import 'games/aprender_numeros_screen.dart';
+import 'games/caza_letra_screen.dart';
 import 'games/clasificar_screen.dart';
 import 'games/colores_screen.dart';
 import 'games/donde_esta_screen.dart';
 import 'games/emociones_screen.dart';
 import 'games/forma_palabras_screen.dart';
+import 'games/forma_silabas_screen.dart';
 import 'games/formas_screen.dart';
 import 'games/lectura_screen.dart';
 import 'games/leer_palabra_screen.dart';
@@ -20,6 +22,7 @@ import 'games/opuestos_screen.dart';
 import 'games/pintar_screen.dart';
 import 'games/reloj_screen.dart';
 import 'games/restas_screen.dart';
+import 'games/silabas_screen.dart';
 import 'games/sombras_screen.dart';
 import 'games/sumas_screen.dart';
 import 'games/trazo_letras_screen.dart';
@@ -53,6 +56,8 @@ class HomeScreen extends StatelessWidget {
         AprenderLetrasScreen.new),
     Categoria('Forma', '🧩', Color(0xFFE94B86),
         FormaPalabrasScreen.new),
+    Categoria('Sílabas', '🔤', Color(0xFFFF6B7A),
+        SilabasScreen.new),
     Categoria('Números', '🔢', Color(0xFF5B8DEF),
         AprenderNumerosScreen.new),
     Categoria('Colores', '🎨', Color(0xFFA855F7),
@@ -90,6 +95,10 @@ class HomeScreen extends StatelessWidget {
         LecturaScreen.new),
     Categoria('Leer', '📖', Color(0xFFF59E0B),
         LeerPalabraScreen.new),
+    Categoria('Forma sílabas', '🧩', Color(0xFF7C4DFF),
+        FormaSilabasScreen.new),
+    Categoria('Caza letra', '🎯', Color(0xFF06B6D4),
+        CazaLetraScreen.new),
   ];
 
   static const _crea = [
